@@ -478,10 +478,13 @@ header treatment. Adjust this line if you would rather count it differently.
 - **The cart is write-only.** There is no cart drawer, line-item list or
   running total — the request succeeds, fires its event and reports inline.
   Nothing accumulates, because the brief scoped this to the add-to-cart call.
-- **Colour has one option (Quartz)**, because that is all the design specifies.
-  The dropdown is a full ARIA listbox — keyboard navigation, `aria-selected`,
-  focus return, click-outside dismissal — so it is a working control with one
-  entry rather than a stub; more colours are data, not code.
+- **A second colour was added beyond the design.** The Figma specifies only
+  Quartz, which leaves the Color dropdown a control with a single entry. I
+  added a Midnight finish (swatch derived from the Quartz render) and the six
+  variants it implies, so the dropdown is demonstrably a working control rather
+  than something that only looks like one. This is the one place the build
+  deliberately exceeds the file; everything else follows it. Removing it is two
+  lines in `product-data.js`.
 - **No automated accessibility audit.** Semantics were built in deliberately —
   radio groups for options, a real `<table>` for the comparison, generated
   `aria-expanded`/`aria-controls`, roving tabindex, a skip link, `role="status"`

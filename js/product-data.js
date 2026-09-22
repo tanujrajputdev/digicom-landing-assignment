@@ -72,7 +72,8 @@
     styles: STYLES,
     packs: PACKS,
     colors: [
-      { id: 'quartz', label: 'Quartz', swatch: 'assets/images/swatch-quartz.webp' }
+      { id: 'quartz',   label: 'Quartz',   swatch: 'assets/images/swatch-quartz.webp' },
+      { id: 'midnight', label: 'Midnight', swatch: 'assets/images/swatch-midnight.webp' }
     ],
     selectedVariantId: 45329087452195,
 
@@ -101,7 +102,32 @@
 
       { id: 45329087452199, style: 'stemmed',  pack: 'pair-plus', color: 'quartz',
         title: 'Stemmed / Couple Pair + 2 Chill Cradles / Quartz',
-        sku: 'VC-STMD-PRC-QTZ',  price: 107.92, compareAt: 119.95, inventory: 4 }
+        sku: 'VC-STMD-PRC-QTZ',  price: 107.92, compareAt: 119.95, inventory: 4 },
+
+      /* ------------------------------------------- midnight (+$4 finish) */
+      { id: 45329087452200, style: 'stemless', pack: 'single',    color: 'midnight',
+        title: 'Stemless / Single / Midnight',
+        sku: 'VC-STMLS-SGL-MID', price: 44.46, compareAt: 48.95, inventory: 16 },
+
+      { id: 45329087452201, style: 'stemless', pack: 'pair',      color: 'midnight',
+        title: 'Stemless / Couple Pair / Midnight',
+        sku: 'VC-STMLS-PR-MID',  price: 84.92, compareAt: 94.95, inventory: 11 },
+
+      { id: 45329087452202, style: 'stemless', pack: 'pair-plus', color: 'midnight',
+        title: 'Stemless / Couple Pair + 2 Chill Cradles / Midnight',
+        sku: 'VC-STMLS-PRC-MID', price: 111.92, compareAt: 124.95, inventory: 7 },
+
+      { id: 45329087452203, style: 'stemmed',  pack: 'single',    color: 'midnight',
+        title: 'Stemmed / Single / Midnight',
+        sku: 'VC-STMD-SGL-MID',  price: 44.46, compareAt: 48.95, inventory: 22 },
+
+      { id: 45329087452204, style: 'stemmed',  pack: 'pair',      color: 'midnight',
+        title: 'Stemmed / Couple Pair / Midnight',
+        sku: 'VC-STMD-PR-MID',   price: 84.92, compareAt: 94.95, inventory: 9 },
+
+      { id: 45329087452205, style: 'stemmed',  pack: 'pair-plus', color: 'midnight',
+        title: 'Stemmed / Couple Pair + 2 Chill Cradles / Midnight',
+        sku: 'VC-STMD-PRC-MID',  price: 111.92, compareAt: 124.95, inventory: 3 }
     ],
 
     /* Gallery slides. Keyed by style so switching tabs reorders the gallery. */
