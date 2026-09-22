@@ -105,7 +105,6 @@
 
   ns.analytics = {
     viewItem: viewItem,
-    addToCart: addToCart,
-    hasViewItemFired: function () { return viewItemHasFired; }
+    addToCart: addToCart
   };
 })(window.Digicom = window.Digicom || {});
