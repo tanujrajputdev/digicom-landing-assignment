@@ -1,0 +1,244 @@
+/*
+ * base.css — font faces, reset, element defaults, shared primitives.
+ */
+
+/* ------------------------------------------------------------- fonts */
+/* Self-hosted so the page makes no third-party requests and renders
+   identically offline. Both families are variable fonts, so one file
+   covers the whole weight range. */
+
+@font-face {
+  font-family: 'Cormorant';
+  src: url('../assets/fonts/cormorant-latin.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant';
+  src: url('../assets/fonts/cormorant-italic-latin.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter-latin.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/fonts/nunito-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ------------------------------------------------------------- reset */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--c-bg);
+  color: var(--c-body);
+  font-family: var(--ff-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, p, figure, blockquote { margin: 0; }
+
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+img, picture, svg, video {
+  display: block;
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* A single, consistent focus ring. Only shows for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* ------------------------------------------------------- primitives */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--content-max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  padding-block: var(--section-pad-block);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link — visible only once focused. */
+.skip-link {
+  position: absolute;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: 100;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--c-primary);
+  color: #fff;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--dur) var(--ease);
+}
+.skip-link:focus { transform: translateY(0); }
+
+/* ---------------------------------------------------------- typography */
+
+.eyebrow {
+  font-size: var(--fs-xs);
+  line-height: 1.7857;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  color: var(--c-accent);
+  font-weight: 400;
+}
+
+.h1, .h2 {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  color: var(--c-heading);
+}
+
+.h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-h1);
+  letter-spacing: -0.005em;
+}
+
+.h2 {
+  font-size: var(--fs-h2);
+  line-height: var(--lh-h2);
+}
+
+/* The display face's italic is used as an in-headline accent. The hero
+   sets it bold; section headings use the regular italic in brand teal. */
+.h1 em {
+  font-style: italic;
+  font-weight: 700;
+  color: var(--c-accent);
+}
+
+.h2 em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--c-primary);
+}
+
+.section__head {
+  text-align: center;
+  max-width: 962px;
+  margin-inline: auto;
+}
+
+.section__head .h2 { margin-bottom: var(--sp-3); }
+
+.section__sub {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--c-body);
+}
+
+/* ------------------------------------------------------------ buttons */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 52px;
+  padding: var(--sp-4) var(--sp-8);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease),
+              color var(--dur) var(--ease),
+              transform var(--dur-fast) var(--ease);
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn--primary {
+  background: var(--c-primary);
+  color: #fff;
+}
+.btn--primary:hover { background: var(--c-primary-hover); }
+
+.btn--outline {
+  background: transparent;
+  border-color: var(--c-primary);
+  color: var(--c-primary);
+}
+.btn--outline:hover {
+  background: var(--c-primary);
+  color: #fff;
+}
+
+.btn--block { width: 100%; }
+
+.btn[disabled] {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* --------------------------------------------------------- star rating */
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: var(--c-star);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}

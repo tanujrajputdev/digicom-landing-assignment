@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VoChill — Keep Your Wine Perfectly Chilled, Right in Your Glass</title>
+<meta name="description" content="VoChill keeps your wine at exactly the right temperature — no ice, no dilution, no metal tumblers. Just your glass, your wine, and every sip the way the winemaker intended.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233d5f60'/%3E%3Cpath d='M9 9h4l3 9 3-9h4l-5 14h-4z' fill='%239be0de'/%3E%3C/svg%3E">
+
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/cormorant-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/sections.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<a class="skip-link" href="#product">Skip to product</a>
+
+<main id="top">
+
+  <!-- ===================================================== hero (1:8) -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__media">
+      <picture>
+        <source srcset="assets/images/hero-pour.webp" type="image/webp">
+        <img src="assets/images/hero-pour.jpg"
+             alt="Two hands raising chilled glasses of rosé beside a bottle, poolside"
+             width="1620" height="1364" fetchpriority="high" decoding="async">
+      </picture>
+    </div>
+
+    <div class="hero__inner container">
+      <div class="hero__content">
+        <p class="eyebrow">As Seen on Shark Tank &amp; Oprah&rsquo;s Favorite Things</p>
+
+        <h1 class="h1" id="hero-title">
+          The Last Sip Should Be<br>
+          <em>Just as Perfect</em> as the First
+        </h1>
+
+        <p class="hero__lead">
+          VoChill keeps your wine at exactly the right temperature — no ice, no
+          dilution, no metal tumblers. Just your glass, your wine, and every sip
+          the way the winemaker intended.
+        </p>
+
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="#product" data-hero-style="stemless">Shop the Stemless Pair</a>
+          <a class="btn btn--outline" href="#product" data-hero-style="stemmed">Shop the Stemmed Pair</a>
+        </div>
+
+        <ul class="hero__proof">
+          <li class="hero__proof-item">
+            <img class="hero__stars" src="assets/images/stars-rating.svg" alt="" width="97" height="17" aria-hidden="true">
+            <span><strong>Over 1M+ Chilled Glasses</strong> since 2020.</span>
+          </li>
+          <li class="hero__proof-sep" aria-hidden="true">|</li>
+          <li class="hero__proof-item">Made in the USA</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================ trust bar (1:143) -->
+  <section class="trustbar" aria-label="Product guarantees">
+    <ul class="trustbar__list">
+      <li>100% No-Dilution Technology</li>
+      <li>Works with Your Own Glassware</li>
+      <li>Patented USA Design</li>
+      <li>150,000+ Customers</li>
+      <li>30-Day Satisfaction Guarantee</li>
+    </ul>
+  </section>
+
+  <!-- ================================================== product (1:159) -->
+  <section class="product section" id="product" data-product-section aria-labelledby="product-title">
+    <div class="container product__grid">
+
+      <!-- ------------------------------------------------- gallery -->
+      <div class="product__media">
+        <p class="product__badge">No ice. No dilution. No interruptions</p>
+
+        <div class="gallery" data-gallery>
+          <div class="gallery__stage" data-gallery-stage>
+            <img class="gallery__image"
+                 data-gallery-image
+                 src="assets/images/gallery-main.webp"
+                 alt="A pair of stemless VoChill wine chillers holding filled glasses"
+                 width="1000" height="1000" decoding="async">
+
+            <button class="gallery__nav gallery__nav--prev" type="button"
+                    data-gallery-prev aria-label="Previous image">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15 5 8 12l7 7" fill="none" stroke="currentColor" stroke-width="1.6"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <button class="gallery__nav gallery__nav--next" type="button"
+                    data-gallery-next aria-label="Next image">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="gallery__thumbs" data-gallery-thumbs role="group" aria-label="Product images">
+            <!-- Populated by js/main.js from product-data.js so the rail follows
+                 the selected style. Rendered server-side on a real store. -->
+          </div>
+        </div>
+      </div>
+
+      <!-- --------------------------------------------------- buybox -->
+      <div class="product__info">
+
+        <!-- style switcher (option 1) -->
+        <fieldset class="styleswitch">
+          <legend class="visually-hidden">Choose a chiller style</legend>
+          <div class="styleswitch__list" data-style-list><!-- rendered by main.js --></div>
+        </fieldset>
+
+        <h2 class="h2 product__title" id="product-title" data-product-heading>Stemless Wine Chiller Pair</h2>
+
+        <p class="product__tagline">
+          Keep Your Wine Perfectly Chilled Right in Your Glass.<br>
+          No more warm wine halfway through a glass. Game changer.
+        </p>
+
+        <p class="product__rating">
+          <img src="assets/images/stars-rating.svg" alt="Rated 4.8 out of 5" width="103" height="21">
+          <a href="#reviews-count">238 Reviews</a>
+        </p>
+
+        <form class="product__form" data-product-form novalidate>
+
+          <!-- pack (option 2) -->
+          <fieldset class="option">
+            <legend class="option__label">Choose Variant</legend>
+            <div class="option__chips" data-pack-list><!-- rendered by main.js --></div>
+          </fieldset>
+
+          <!-- colour (option 3) -->
+          <fieldset class="option">
+            <legend class="option__label">Color</legend>
+            <div class="option__chips" data-color-list><!-- rendered by main.js --></div>
+          </fieldset>
+
+          <!-- price -->
+          <p class="price">
+            <span class="price__now" data-price-now>$80.92</span>
+            <s class="price__was" data-price-was>$89.95</s>
+            <span class="price__save" data-price-save>Save $9.03</span>
+          </p>
+
+          <ul class="featurelist">
+            <li><span class="featurelist__tick" aria-hidden="true">✓</span>Keeps wine cold for up to 2 hours indoors, 1.5 hours outdoors</li>
+            <li><span class="featurelist__tick" aria-hidden="true">✓</span><span data-feature-glassware>Works with any standard stemless wine glasses</span></li>
+            <li><span class="featurelist__tick" aria-hidden="true">✓</span>Patented Chill Cradle™ — nothing ever enters your glass</li>
+            <li><span class="featurelist__tick" aria-hidden="true">✓</span>Strong magnetic connection holds the cradle securely in place</li>
+            <li><span class="featurelist__tick" aria-hidden="true">✓</span>Made in the USA · Designed and assembled in Austin, TX</li>
+          </ul>
+
+          <!-- quantity -->
+          <div class="qty">
+            <span class="option__label" id="qty-label">Quantity</span>
+            <div class="qty__control">
+              <button class="qty__step" type="button" data-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
+              <input class="qty__input" type="number" inputmode="numeric"
+                     value="1" min="1" max="10" step="1"
+                     data-qty-input aria-labelledby="qty-label">
+              <button class="qty__step" type="button" data-qty-step="1" aria-label="Increase quantity">+</button>
+            </div>
+            <span class="qty__stock" data-stock-note></span>
+          </div>
+
+          <button class="atc" type="submit" data-add-to-cart>
+            <span class="atc__label">ADD TO CART</span>
+            <span class="atc__spinner" aria-hidden="true"></span>
+          </button>
+
+          <!-- Announced to screen readers when the cart request settles. -->
+          <p class="cartstatus" data-cart-status role="status" aria-live="polite"></p>
+
+          <p class="shipnote">
+            <img src="assets/images/icon-ships.svg" alt="" width="15" height="12" aria-hidden="true">
+            Ships Next Day <span aria-hidden="true">|</span> 150,000+ wine lovers upgraded their pour
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================== how it works (1:94) -->
+  <section class="howitworks section" aria-labelledby="hiw-title">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2" id="hiw-title">Simple by Design. <em>Perfect Every Time.</em></h2>
+        <p class="section__sub">Two products, one principle. Choose your style below and see exactly how it works.</p>
+      </div>
+
+      <ol class="steps">
+        <li class="step">
+          <div class="step__art">
+            <picture>
+              <source srcset="assets/images/step-01-freeze.webp" type="image/webp">
+              <img src="assets/images/step-01-freeze.png" alt="" width="1000" height="525" loading="lazy" decoding="async">
+            </picture>
+          </div>
+          <p class="step__num">01</p>
+          <h3 class="step__title">Freeze the Chill Cradle™</h3>
+          <p class="step__body">Detach the Chill Cradle™ from the base and place it in your freezer for at least 3 hours until frozen solid. Keep a spare ready for back-to-back glasses.</p>
+        </li>
+        <li class="step">
+          <div class="step__art">
+            <picture>
+              <source srcset="assets/images/step-02-attach.webp" type="image/webp">
+              <img src="assets/images/step-02-attach.png" alt="" width="1000" height="525" loading="lazy" decoding="async">
+            </picture>
+          </div>
+          <p class="step__num">02</p>
+          <h3 class="step__title">Attach to the Base</h3>
+          <p class="step__body">Snap the frozen cradle onto the weighted base. The magnetic connection seats it firmly, so the whole thing lifts and sets down as one piece.</p>
+        </li>
+        <li class="step">
+          <div class="step__art">
+            <picture>
+              <source srcset="assets/images/step-03-pour.webp" type="image/webp">
+              <img src="assets/images/step-03-pour.png" alt="" width="1000" height="525" loading="lazy" decoding="async">
+            </picture>
+          </div>
+          <p class="step__num">03</p>
+          <h3 class="step__title">Rest Your Glass &amp; Pour</h3>
+          <p class="step__body">Set your wine glass inside the Chill Cradle™. Pour and enjoy — lift the glass to sip as normal. Nothing enters the glass. Pure, undiluted flavor.</p>
+        </li>
+        <li class="step">
+          <div class="step__art">
+            <picture>
+              <source srcset="assets/images/step-04-refreeze.webp" type="image/webp">
+              <img src="assets/images/step-04-refreeze.png" alt="" width="1000" height="525" loading="lazy" decoding="async">
+            </picture>
+          </div>
+          <p class="step__num">04</p>
+          <h3 class="step__title">Wipe &amp; Refreeze</h3>
+          <p class="step__body">Detach the cradle, wipe it with a dry towel, and return it to the freezer. Ready for your next glass — tonight, tomorrow, indefinitely.</p>
+        </li>
+      </ol>
+
+      <div class="howitworks__cta">
+        <a class="btn btn--mint" href="#product">Get the Wine Chillers →</a>
+        <p class="howitworks__note">Chills up to 2 hrs indoors <span aria-hidden="true">|</span> 1.5 hrs outdoors</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== comparison (1:81) -->
+  <section class="compare section" aria-labelledby="compare-title">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2" id="compare-title">Why Choose Our <em>Wine Chillers</em></h2>
+        <p class="section__sub">Every other solution either changes the vessel, goes inside the glass, or only chills the bottle — not the pour.</p>
+      </div>
+
+      <div class="compare__scroll">
+        <table class="compare__table">
+          <caption class="visually-hidden">VoChill compared with typical wine-chilling alternatives</caption>
+          <thead>
+            <tr>
+              <th scope="col"><span class="visually-hidden">Feature</span></th>
+              <th scope="col" class="compare__brand">vochill</th>
+              <th scope="col" class="compare__alt">Typical alternative</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">No dilution</th>
+              <td class="compare__yes" data-label="vochill">Nothing goes into your wine</td>
+              <td class="compare__no" data-label="Typical alternative">Requires a tumbler</td>
+            </tr>
+            <tr>
+              <th scope="row">Zero dilution of wine</th>
+              <td class="compare__yes" data-label="vochill">Nothing enters the glass</td>
+              <td class="compare__no" data-label="Typical alternative">Ice dilutes flavor</td>
+            </tr>
+            <tr>
+              <th scope="row">Keeps wine cold</th>
+              <td class="compare__yes" data-label="vochill">Stays cold up to 2 hours</td>
+              <td class="compare__no" data-label="Typical alternative">Uneven, uncontrolled</td>
+            </tr>
+            <tr>
+              <th scope="row">Works for reds &amp; whites</th>
+              <td class="compare__yes" data-label="vochill">Works for reds &amp; whites</td>
+              <td class="compare__no" data-label="Typical alternative">Usually whites only</td>
+            </tr>
+            <tr>
+              <th scope="row">See and smell your wine</th>
+              <td class="compare__yes" data-label="vochill">Full glass visible</td>
+              <td class="compare__no" data-label="Typical alternative">Blocked by vessel</td>
+            </tr>
+            <tr>
+              <th scope="row">Reusable indefinitely</th>
+              <td class="compare__yes" data-label="vochill">Freezes thousands of times</td>
+              <td class="compare__no" data-label="Typical alternative">Single use or degrades</td>
+            </tr>
+            <tr>
+              <th scope="row">Designed and made in USA</th>
+              <td class="compare__yes" data-label="vochill">Austin, TX</td>
+              <td class="compare__no" data-label="Typical alternative">Mass overseas production</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="compare__cta">
+        <a class="btn btn--primary" href="#product">Get the Wine Chillers →</a>
+        <p class="compare__note">30-Day Returns</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== faq (1:255) -->
+  <section class="faq section" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section__head">
+        <h2 class="h2" id="faq-title">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq__list" data-accordion="single">
+
+        <div class="faq__item" data-accordion-item data-accordion-open>
+          <h3 class="faq__heading">
+            <button class="faq__trigger" type="button" data-accordion-trigger>
+              <span class="faq__q">How long does VoChill keep my wine cold?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq__panel" data-accordion-panel>
+            <div class="faq__answer">
+              <p>Up to two hours indoors and about 90 minutes outdoors, from a cradle frozen solid for at least three hours. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item" data-accordion-item>
+          <h3 class="faq__heading">
+            <button class="faq__trigger" type="button" data-accordion-trigger>
+              <span class="faq__q">Does anything go into my wine?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq__panel" data-accordion-panel>
+            <div class="faq__answer">
+              <p>Nothing. The Chill Cradle™ sits outside the glass and chills through the wall of the bowl, so there is no ice, no insert and no dilution. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item" data-accordion-item>
+          <h3 class="faq__heading">
+            <button class="faq__trigger" type="button" data-accordion-trigger>
+              <span class="faq__q">Will it work with my wine glasses?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq__panel" data-accordion-panel>
+            <div class="faq__answer">
+              <p>The stemless model fits most standard stemless glasses, and the stemmed model fits most standard stemmed bowls. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item" data-accordion-item>
+          <h3 class="faq__heading">
+            <button class="faq__trigger" type="button" data-accordion-trigger>
+              <span class="faq__q">Does it work on any other beverages?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq__panel" data-accordion-panel>
+            <div class="faq__answer">
+              <p>Anything you would rather drink cold — sparkling water, cocktails, iced coffee, non-alcoholic wine. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item" data-accordion-item>
+          <h3 class="faq__heading">
+            <button class="faq__trigger" type="button" data-accordion-trigger>
+              <span class="faq__q">What is VoChill made of?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq__panel" data-accordion-panel>
+            <div class="faq__answer">
+              <p>A food-safe ABS shell with a non-toxic freezable gel core and a weighted base. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq__item" data-accordion-item>
+          <h3 class="faq__heading">
+            <button class="faq__trigger" type="button" data-accordion-trigger>
+              <span class="faq__q">Why buy two instead of one?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="faq__panel" data-accordion-panel>
+            <div class="faq__answer">
+              <p>Wine is rarely enjoyed alone, and a second cradle means back-to-back glasses without waiting for a refreeze. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__brand">VoChill</p>
+    <p class="footer__note">Designed and assembled in Austin, TX · 30-day satisfaction guarantee</p>
+    <p class="footer__disclaimer">Front-end assignment build. Cart requests are simulated — no order is placed.</p>
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/product-data.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/cart-api.js"></script>
+<script src="js/cart-mock.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/accordion.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

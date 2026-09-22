@@ -1,0 +1,239 @@
+/*
+ * responsive.css — mobile adaptation.
+ *
+ * The Figma is desktop-only (1600px frame), so everything below is an
+ * interpretation rather than a transcription. Loaded last so it overrides.
+ *
+ * Breakpoints: 1200 / 1024 / 860 / 640 / 420.
+ */
+
+/* ------------------------------------------------------- fluid type scale */
+/* Headings interpolate between the mobile size and the Figma desktop size,
+   so there is no jump at a breakpoint. */
+:root {
+  --fs-h1: clamp(2rem, 1.15rem + 2.65vw, 3.125rem);
+  --fs-h2: clamp(1.75rem, 0.95rem + 2.5vw, 3.125rem);
+  --fs-body: clamp(1rem, 0.94rem + 0.2vw, 1.125rem);
+}
+
+/* ================================================================= 1200px */
+@media (max-width: 1200px) {
+  .steps { gap: 24px; }
+  .step { padding: 20px; }
+  .step__title { font-size: 21px; line-height: 27px; }
+  .hero__actions { width: 100%; max-width: 414px; }
+}
+
+/* ================================================================= 1024px */
+@media (max-width: 1024px) {
+  /* Four steps no longer fit legibly — two rows of two. */
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  .product__grid { gap: var(--sp-6); }
+  .product__tagline { font-size: 21px; }
+  .compare__table tbody th { font-size: 19px; }
+  .compare__yes, .compare__no { font-size: 17px; }
+}
+
+/* ================================================================== 860px */
+@media (max-width: 860px) {
+  /* Hero: the bleed image can't hold half the width, so it stacks above. */
+  .hero {
+    display: block;
+    min-height: 0;
+  }
+
+  .hero__media {
+    position: static;
+    width: 100%;
+    height: clamp(240px, 46vw, 380px);
+  }
+
+  .hero__inner { padding-block: var(--sp-9) var(--sp-10); }
+  .hero__content { max-width: none; gap: var(--sp-4); }
+
+  /* Buybox drops below the gallery. */
+  .product__grid { grid-template-columns: minmax(0, 1fr); }
+  .product__media { max-width: 620px; margin-inline: auto; width: 100%; }
+  .product__info { max-width: 620px; margin-inline: auto; width: 100%; }
+
+  .trustbar__list {
+    gap: var(--sp-4) var(--sp-5);
+    font-size: var(--fs-xs);
+  }
+
+  /* Once the proof row wraps, a lone "|" strands at the start of line two. */
+  .hero__proof {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .hero__proof-sep { display: none; }
+
+  /* Separators stop making sense once the row wraps. */
+  .trustbar__list li + li::before { content: none; }
+
+  .trustbar__list li {
+    padding: 4px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: var(--r-pill);
+  }
+}
+
+/* ================================================================== 900px */
+/* The table's 720px minimum would otherwise force a sideways scroll between
+   roughly 770px and 860px, so the card layout starts before that window. */
+@media (max-width: 900px) {
+  /*
+   * Comparison table → stacked cards. Each row becomes its own block with the
+   * feature as a heading and the two columns labelled from data-label, so the
+   * comparison survives without a horizontal scroll. The table markup stays
+   * semantic for assistive tech and desktop.
+   */
+  .compare__scroll { overflow-x: visible; margin-top: 32px; }
+
+  .compare__table {
+    min-width: 0;
+    display: block;
+    table-layout: auto;
+  }
+
+  .compare__table thead { display: none; }
+  .compare__table tbody { display: grid; gap: 12px; }
+
+  .compare__table tr {
+    display: block;
+    background: var(--c-surface);
+    border: 1px solid var(--c-cell-line);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+
+  .compare__table th,
+  .compare__table td {
+    display: block;
+    /* The desktop column widths would otherwise keep the header band at 46%
+       of the card once the cells become blocks. */
+    width: auto;
+    height: auto;
+    padding: 14px 18px;
+    border: 0;
+  }
+
+  .compare__table th:first-child,
+  .compare__table th:not(:first-child) { width: auto; }
+
+  .compare__table tbody th {
+    font-size: 18px;
+    font-weight: 600;
+    background: #f4f2ee;
+    border-bottom: 1px solid var(--c-cell-line);
+  }
+
+  .compare__table td {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    font-size: var(--fs-sm);
+    text-align: right;
+  }
+
+  .compare__table td + td { border-top: 1px solid var(--c-line-soft); }
+
+  /* The column header the cell belonged to, restored per cell. */
+  .compare__table td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-family: var(--ff-body);
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--c-muted);
+  }
+
+}
+
+/* ================================================================== 768px */
+@media (max-width: 768px) {
+  .faq__trigger { padding: 18px 16px; }
+  .faq__answer { padding: 0 16px 18px; }
+}
+
+/* ================================================================== 640px */
+@media (max-width: 640px) {
+  .steps { grid-template-columns: minmax(0, 1fr); }
+
+  .step__art { aspect-ratio: 16 / 9; }
+
+  /* Style tabs and pack chips need the full width to stay readable. */
+  .styleswitch__list { flex-direction: column; }
+
+  .option__chips { flex-wrap: wrap; }
+
+  .option__chips .chip {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    padding-inline: 14px;
+  }
+
+  .chip--color { flex: 1 1 100%; }
+
+  .styleswitch__item,
+  .chip { justify-content: flex-start; padding-inline: 14px; }
+
+  .gallery__thumb { width: 64px; height: 64px; }
+
+  /* Arrows are the only affordance on touch, so keep them visible. */
+  .gallery__nav { opacity: 1; width: 38px; height: 38px; }
+
+  .qty { flex-wrap: wrap; gap: var(--sp-3) var(--sp-4); }
+
+  .price { flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }
+
+  .product__tagline { font-size: 19px; }
+
+  .btn--mint { min-width: 0; width: 100%; }
+
+  .howitworks__cta,
+  .compare__cta { margin-top: 36px; }
+
+  .howitworks__cta .btn,
+  .compare__cta .btn { width: 100%; }
+
+  .footer__brand { font-size: 26px; }
+}
+
+/* ================================================================== 420px */
+@media (max-width: 420px) {
+  .hero__proof { font-size: 12px; }
+  .featurelist li { gap: 10px; font-size: var(--fs-xs); }
+  .price__now { font-size: 22px; }
+  .price__was { font-size: 17px; }
+  .compare__table td { flex-direction: column; align-items: flex-start; text-align: left; }
+  .gallery__thumbs { gap: 8px; }
+  .gallery__thumb { width: 56px; height: 56px; }
+}
+
+/* ------------------------------------------------- coarse pointer tweaks */
+@media (hover: none) {
+  /* No hover to reveal them, so the gallery arrows stay put. */
+  .gallery__nav { opacity: 1; }
+}
+
+/* ------------------------------------------------------------- printing */
+@media print {
+  .gallery__nav,
+  .atc,
+  .qty,
+  .skip-link { display: none !important; }
+
+  .faq__panel { max-height: none !important; visibility: visible !important; }
+}

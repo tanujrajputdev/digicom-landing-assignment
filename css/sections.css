@@ -1,0 +1,843 @@
+/*
+ * sections.css — per-section layout. Desktop-first, matching the 1600px
+ * Figma frame; responsive.css adapts downward.
+ */
+
+/* ==================================================== hero (node 1:8) == */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 682px;
+  background: var(--c-bg);
+  overflow: hidden;
+}
+
+/* The photo bleeds to the right edge — 808/1600 of the frame. */
+.hero__media {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  width: 50.5%;
+}
+
+.hero__media picture,
+.hero__media img {
+  width: 100%;
+  height: 100%;
+}
+
+.hero__media img {
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  padding-block: var(--sp-10);
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-5);
+  max-width: 610px;
+}
+
+.hero__lead {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--c-body);
+}
+
+.hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  width: 414px;
+  max-width: 100%;
+}
+
+.hero__proof {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-2xs);
+  line-height: 1.25;
+  color: var(--c-muted);
+}
+
+.hero__proof-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.hero__proof strong { font-weight: 700; }
+
+.hero__proof-sep { color: var(--c-muted); font-weight: 700; }
+
+.hero__stars { width: 97px; height: auto; }
+
+/* ============================================== trust bar (node 1:143) == */
+
+.trustbar {
+  background: var(--c-primary);
+  color: #fff;
+}
+
+.trustbar__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-7);
+  padding: 21px var(--gutter);
+  font-size: var(--fs-sm);
+  line-height: 25px;
+  text-align: center;
+}
+
+.trustbar__list li { position: relative; }
+
+.trustbar__list li + li::before {
+  content: '|';
+  position: absolute;
+  left: calc(var(--sp-7) / -2);
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ================================================ product (node 1:159) == */
+
+.product { background: var(--c-bg); }
+
+.product__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 791fr) minmax(0, 549fr);
+  gap: var(--sp-7);
+  align-items: start;
+}
+
+/* ------------------------------------------------------------- gallery */
+
+.product__media {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product__badge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 21px 8px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-primary);
+  border-radius: 4px;
+  color: var(--c-primary);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  line-height: 25px;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.gallery { display: flex; flex-direction: column; gap: var(--sp-4); }
+
+.gallery__stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--c-surface);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.gallery__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery__nav {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--c-line);
+  border-radius: 50%;
+  color: var(--c-heading);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease),
+              background-color var(--dur) var(--ease);
+}
+
+.gallery__nav svg { width: 22px; height: 22px; }
+.gallery__nav--prev { left: 12px; }
+.gallery__nav--next { right: 12px; }
+
+/* Arrows stay out of the way until the shopper reaches for them — but are
+   always available to keyboard users. */
+.gallery:hover .gallery__nav,
+.gallery__nav:focus-visible { opacity: 1; }
+
+.gallery__nav:hover { background: #fff; }
+
+.gallery__thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.gallery__thumb {
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery__thumb:hover { border-color: var(--c-accent); }
+
+.gallery__thumb.is-active {
+  border-color: var(--c-primary);
+  box-shadow: inset 0 0 0 1px var(--c-primary);
+}
+
+/* -------------------------------------------------------------- buybox */
+
+.product__info {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.styleswitch,
+.option {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.styleswitch__list {
+  display: flex;
+  gap: 8px;
+}
+
+.styleswitch__item,
+.chip {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 52px;
+  padding: 2px 8px;
+  background: var(--c-bg);
+  border: 1px solid #d8d9d0;
+  border-radius: 2px;
+  color: var(--c-ink);
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease),
+              background-color var(--dur) var(--ease);
+}
+
+.styleswitch__item input,
+.chip input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.styleswitch__item img,
+.chip img {
+  /* Scales with the column so labels keep their line below 1600px, where the
+     buybox is narrower than the Figma frame. */
+  width: clamp(36px, 2.9vw, 46px);
+  height: clamp(36px, 2.9vw, 46px);
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.styleswitch__item span {
+  font-family: var(--ff-display);
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.18;
+  text-wrap: balance;
+}
+
+.chip span {
+  font-family: var(--ff-display);
+  font-size: clamp(14px, 1.05vw, 16px);
+  font-weight: 600;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+
+.styleswitch__item:hover,
+.chip:hover { border-color: var(--c-accent); }
+
+/* :has() reflects the radio state without a JS class toggle. */
+.styleswitch__item:has(input:checked) {
+  background: #f6f8f8;
+  border-color: var(--c-primary);
+}
+
+.chip:has(input:checked) {
+  background: var(--c-mint-soft);
+  border-color: var(--c-primary);
+}
+
+.styleswitch__item:has(input:focus-visible),
+.chip:has(input:focus-visible) {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
+}
+
+.chip.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chip--color {
+  flex: 0 1 165px;
+  background: var(--c-surface);
+}
+
+.option__label {
+  display: block;
+  padding: 0;
+  margin-bottom: 5px;
+  font-size: var(--fs-body);
+  line-height: 25px;
+  color: var(--c-label);
+}
+
+.option__chips { display: flex; gap: 8px; }
+
+.product__title {
+  font-weight: 500;
+  color: #000;
+}
+
+.product__tagline {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: 25px;
+  line-height: 1.12;
+  color: #000;
+}
+
+.product__rating {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-2xs);
+}
+
+.product__rating img { height: 21px; width: auto; }
+
+.product__rating a {
+  color: var(--c-heading);
+  text-decoration-color: var(--c-line);
+  text-underline-offset: 3px;
+}
+
+.product__form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* --------------------------------------------------------------- price */
+
+.price {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.price__now {
+  font-size: 25px;
+  font-weight: 600;
+  color: var(--c-heading);
+}
+
+.price__was {
+  font-size: 20px;
+  color: rgba(51, 51, 51, 0.4);
+}
+
+.price__save {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding-inline: var(--sp-3);
+  background: var(--c-surface);
+  border: 1px solid var(--c-primary);
+  border-radius: 2px;
+  color: var(--c-primary);
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* -------------------------------------------------------- feature list */
+
+.featurelist {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.featurelist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  font-size: var(--fs-sm);
+  line-height: 25px;
+  color: var(--c-heading);
+}
+
+.featurelist__tick {
+  flex-shrink: 0;
+  font-size: var(--fs-body);
+  font-weight: 800;
+  line-height: 25px;
+  color: var(--c-accent);
+}
+
+/* ------------------------------------------------------------ quantity */
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.qty .option__label { margin-bottom: 0; }
+
+.qty__control {
+  display: inline-flex;
+  align-items: center;
+  height: 52px;
+  border: 1px solid #d8d9d0;
+  border-radius: 2px;
+  background: var(--c-surface);
+}
+
+.qty__step {
+  width: 44px;
+  height: 100%;
+  background: none;
+  border: 0;
+  color: var(--c-heading);
+  font-size: var(--fs-body);
+  line-height: 1;
+}
+
+.qty__step:hover { color: var(--c-primary); }
+
+.qty__input {
+  width: 52px;
+  height: 100%;
+  border: 0;
+  border-inline: 1px solid #efece7;
+  background: none;
+  text-align: center;
+  font-size: var(--fs-sm);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.qty__input::-webkit-outer-spin-button,
+.qty__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qty__stock {
+  font-size: var(--fs-2xs);
+  color: var(--c-error);
+}
+
+/* ---------------------------------------------------------- add to cart */
+
+.atc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  width: 100%;
+  min-height: 54px;
+  padding-inline: var(--sp-7);
+  background: var(--c-mint);
+  border: 0;
+  border-radius: 2px;
+  color: var(--c-ink);
+  font-family: var(--ff-alt);
+  font-size: 16.24px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: background-color var(--dur) var(--ease),
+              transform var(--dur-fast) var(--ease);
+}
+
+.atc:hover:not([disabled]) { background: #89d5d3; }
+.atc:active:not([disabled]) { transform: translateY(1px); }
+
+.atc[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+.atc__spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(77, 78, 78, 0.3);
+  border-top-color: var(--c-ink);
+  border-radius: 50%;
+}
+
+.atc.is-loading .atc__spinner {
+  display: block;
+  animation: atc-spin 700ms linear infinite;
+}
+
+@keyframes atc-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .atc.is-loading .atc__spinner { animation-duration: 2s; }
+}
+
+.cartstatus {
+  min-height: 25px;
+  margin-top: -12px;
+  font-size: var(--fs-xs);
+  line-height: 25px;
+}
+
+.cartstatus[data-tone='success'] { color: var(--c-success); }
+.cartstatus[data-tone='error']   { color: var(--c-error); }
+
+.shipnote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  font-size: var(--fs-sm);
+  line-height: 25px;
+  color: var(--c-heading);
+}
+
+.shipnote img { width: 15px; height: 12px; }
+
+/* ============================================ how it works (node 1:94) == */
+
+.howitworks {
+  background: var(--c-dark);
+  color: var(--c-dark-body);
+}
+
+.howitworks .h2 { color: #fff; }
+.howitworks .h2 em { color: #a3c9c7; }
+.howitworks .section__sub { color: #b9b7b2; font-size: var(--fs-sm); }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 46px;
+  margin-top: 60px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 22px 26px;
+  background: var(--c-dark-card);
+  border: 1px solid var(--c-dark-line);
+  border-radius: 22px;
+}
+
+.step__art {
+  width: 100%;
+  aspect-ratio: 287 / 150;
+  display: grid;
+  place-items: center;
+  margin-bottom: 14px;
+}
+
+.step__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.step__num {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 15px;
+  margin-bottom: 14px;
+  border: 1px solid var(--c-mint);
+  border-radius: 3px;
+  color: var(--c-mint);
+  font-family: var(--ff-alt);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.step__title {
+  margin-bottom: 18px;
+  font-family: var(--ff-body);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 30px;
+  color: #fff;
+}
+
+.step__body {
+  font-family: var(--ff-alt);
+  font-size: var(--fs-base);
+  line-height: 25px;
+  color: var(--c-dark-body);
+}
+
+.howitworks__cta,
+.compare__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  margin-top: 56px;
+}
+
+.btn--mint {
+  min-width: 300px;
+  background: var(--c-mint);
+  border-radius: var(--r-sm);
+  color: var(--c-ink);
+  font-weight: 600;
+}
+
+.btn--mint:hover { background: #89d5d3; }
+
+.howitworks__note {
+  font-size: var(--fs-xs);
+  color: #b9b7b2;
+}
+
+/* ============================================= comparison (node 1:81) == */
+
+.compare { background: var(--c-bg); }
+
+.compare__scroll {
+  margin-top: 56px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.compare__table {
+  width: 100%;
+  min-width: 720px;
+  table-layout: fixed;
+}
+
+.compare__table th,
+.compare__table td {
+  height: 80px;
+  padding: 20px 22px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-cell-line);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.compare__table colgroup,
+.compare__table thead th {
+  background: transparent;
+  border: 0;
+  height: 71px;
+  padding-block: 23px;
+}
+
+.compare__table th:first-child { width: 46.2%; }
+.compare__table th:not(:first-child) { width: 26.9%; }
+
+.compare__brand {
+  color: var(--c-primary);
+  font-family: var(--ff-body);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.compare__alt {
+  color: var(--c-no);
+  font-family: var(--ff-alt);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.compare__table tbody th {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 25px;
+  color: #000;
+}
+
+.compare__yes {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--c-yes);
+}
+
+.compare__no {
+  font-family: var(--ff-alt);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--c-no);
+}
+
+.compare__note {
+  font-size: var(--fs-xs);
+  color: var(--c-body);
+}
+
+/* ==================================================== faq (node 1:255) == */
+
+.faq { background: var(--c-bg); }
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  max-width: 719px;
+  margin: 40px auto 0;
+}
+
+.faq__item {
+  background: var(--c-surface);
+  border: 1px solid var(--c-mint);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.faq__item.is-open { border-color: var(--c-primary); }
+
+.faq__heading { margin: 0; font-weight: inherit; }
+
+.faq__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  width: 100%;
+  padding: 23px 20px 22px 24px;
+  background: none;
+  border: 0;
+  text-align: left;
+}
+
+.faq__q {
+  font-size: var(--fs-base);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--c-primary);
+}
+
+/* Plus sign drawn in CSS — rotates its vertical bar away to become a minus. */
+.faq__icon {
+  position: relative;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+.faq__icon::before,
+.faq__icon::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: var(--c-primary);
+  border-radius: 2px;
+  translate: 0 -50%;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+
+.faq__icon::after { transform: rotate(90deg); }
+
+.faq__item.is-open .faq__icon::after {
+  transform: rotate(0deg);
+  opacity: 0;
+}
+
+.faq__panel {
+  max-height: 0;
+  overflow: hidden;
+  /* visibility keeps collapsed answers out of the tab order and the
+     accessibility tree; it is delayed until the collapse finishes. */
+  visibility: hidden;
+  transition: max-height var(--dur-slow) var(--ease),
+              visibility 0s linear var(--dur-slow);
+}
+
+.faq__item.is-open .faq__panel {
+  visibility: visible;
+  transition: max-height var(--dur-slow) var(--ease),
+              visibility 0s linear 0s;
+}
+
+.faq__answer {
+  padding: 0 24px 22px;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--c-body);
+}
+
+/* ================================================================ footer */
+
+.footer {
+  padding-block: 56px;
+  background: var(--c-primary);
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+}
+
+.footer__inner { display: grid; gap: var(--sp-2); }
+
+.footer__brand {
+  font-family: var(--ff-display);
+  font-size: 32px;
+  color: #fff;
+}
+
+.footer__note { font-size: var(--fs-xs); }
+
+.footer__disclaimer {
+  font-size: var(--fs-2xs);
+  color: rgba(255, 255, 255, 0.6);
+}
