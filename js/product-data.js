@@ -118,16 +118,6 @@
         { src: 'assets/images/gallery-cradles.webp',   alt: 'Couple pair with two spare Chill Cradles' },
         { src: 'assets/images/gallery-lifestyle.webp', alt: 'Two friends raising chilled glasses of rosé poolside' }
       ]
-    },
-
-    rating: { value: 4.8, count: 238 },
-
-    features: [
-      'Keeps wine cold for up to 2 hours indoors, 1.5 hours outdoors',
-      'Works with any standard wine glasses',
-      'Patented Chill Cradle™ — nothing ever enters your glass',
-      'Strong magnetic connection holds the cradle securely in place',
-      'Made in the USA · Designed and assembled in Austin, TX'
-    ]
+    }
   };
 })(window.Digicom = window.Digicom || {});
