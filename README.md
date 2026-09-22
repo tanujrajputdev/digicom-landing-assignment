@@ -3,8 +3,13 @@
 A hand-built recreation of selected sections from the Digicom Figma landing page.
 No frameworks, no build step, no dependencies — open `index.html` and it runs.
 
-- **Hosted preview:** _pending deploy_
-- **Source:** _pending push_
+- **Hosted preview:** https://assignment-tanuj-s-projects11.vercel.app
+- **Mirror:** https://tanujrajputdev.github.io/digicom-landing-assignment/
+- **Source:** https://github.com/tanujrajputdev/digicom-landing-assignment
+
+Both hosts serve the same commit. Verified in real Chrome against the live
+URLs: zero console messages, zero exceptions, zero failed requests, and the
+dataLayer events firing in the right order.
 
 ---
 
