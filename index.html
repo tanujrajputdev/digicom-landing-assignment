@@ -145,11 +145,22 @@
             <div class="option__chips" data-pack-list><!-- rendered by main.js --></div>
           </fieldset>
 
-          <!-- colour (option 3) -->
-          <fieldset class="option">
-            <legend class="option__label">Color</legend>
-            <div class="option__chips" data-color-list><!-- rendered by main.js --></div>
-          </fieldset>
+          <!-- colour (option 3) — dropdown, as in the design -->
+          <div class="option">
+            <span class="option__label" id="color-label">Color</span>
+            <div class="colorselect" data-color-select>
+              <button class="colorselect__button" type="button" data-color-button
+                      aria-haspopup="listbox" aria-expanded="false"
+                      aria-labelledby="color-label color-value">
+                <img data-color-thumb src="assets/images/swatch-quartz.webp" alt=""
+                     width="44" height="44" decoding="async">
+                <span class="colorselect__value" id="color-value" data-color-value>Quartz</span>
+                <span class="colorselect__caret" aria-hidden="true"></span>
+              </button>
+              <ul class="colorselect__list" data-color-list role="listbox"
+                  aria-labelledby="color-label" hidden><!-- rendered by main.js --></ul>
+            </div>
+          </div>
 
           <!-- price -->
           <p class="price">
@@ -166,18 +177,7 @@
             <li><span class="featurelist__tick" aria-hidden="true">✓</span>Made in the USA · Designed and assembled in Austin, TX</li>
           </ul>
 
-          <!-- quantity -->
-          <div class="qty">
-            <span class="option__label" id="qty-label">Quantity</span>
-            <div class="qty__control">
-              <button class="qty__step" type="button" data-qty-step="-1" aria-label="Decrease quantity">&minus;</button>
-              <input class="qty__input" type="number" inputmode="numeric"
-                     value="1" min="1" max="10" step="1"
-                     data-qty-input aria-labelledby="qty-label">
-              <button class="qty__step" type="button" data-qty-step="1" aria-label="Increase quantity">+</button>
-            </div>
-            <span class="qty__stock" data-stock-note></span>
-          </div>
+          <p class="stocknote" data-stock-note></p>
 
           <button class="atc" type="submit" data-add-to-cart>
             <span class="atc__label">ADD TO CART</span>
@@ -192,6 +192,68 @@
             Ships Next Day <span aria-hidden="true">|</span> 150,000+ wine lovers upgraded their pour
           </p>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= reviews (1:59) -->
+  <section class="reviews section" aria-labelledby="reviews-title">
+    <div class="container">
+      <div class="reviews__head">
+        <h2 class="h2" id="reviews-title">We Let Our Customers Speak For Us</h2>
+        <div class="reviews__score">
+          <p class="reviews__average">4.8</p>
+          <div class="reviews__scoremeta">
+            <img src="assets/images/stars-reviews.svg" alt="Rated 4.8 out of 5" width="103" height="21">
+            <p id="reviews-count">Based on 238 verified reviews</p>
+          </div>
+        </div>
+      </div>
+
+      <ul class="reviews__grid">
+        <li class="review">
+          <div class="review__person">
+            <span class="review__avatar" aria-hidden="true">S</span>
+            <div>
+              <p class="review__name">Sherley H.</p>
+              <p class="review__verified">Verified Buyer</p>
+            </div>
+          </div>
+          <p class="review__stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
+          <p class="review__tag">Gift for wine lover</p>
+          <blockquote class="review__quote">If you or anyone you know love wine, this is the perfect gift. It really keeps your wine cold which is wonderful if you like to drink your wine slowly. Highly recommend.</blockquote>
+        </li>
+
+        <li class="review">
+          <div class="review__person">
+            <span class="review__avatar" aria-hidden="true">R</span>
+            <div>
+              <p class="review__name">Robin D.</p>
+              <p class="review__verified">Verified Buyer</p>
+            </div>
+          </div>
+          <p class="review__stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
+          <p class="review__tag">Gift for a couple</p>
+          <blockquote class="review__quote">Great idea and stylish too! Gave these as an anniversary present and they were a hit. Both glasses stay cold all evening, which is exactly what we were hoping for.</blockquote>
+        </li>
+
+        <li class="review">
+          <div class="review__person">
+            <span class="review__avatar" aria-hidden="true">C</span>
+            <div>
+              <p class="review__name">Cathleen N.</p>
+              <p class="review__verified">Verified Buyer</p>
+            </div>
+          </div>
+          <p class="review__stars" aria-label="5 out of 5 stars"><span aria-hidden="true">★★★★★</span></p>
+          <p class="review__tag">Bought three</p>
+          <blockquote class="review__quote">What a great product idea. I bought one. Then I bought two more as gifts. No more racing through a glass of white before it goes warm on the porch.</blockquote>
+        </li>
+      </ul>
+
+      <div class="compare__cta">
+        <a class="btn btn--mint" href="#product">Get the Wine Chillers →</a>
+        <p class="compare__note">30-Day Returns</p>
       </div>
     </div>
   </section>
@@ -272,7 +334,7 @@
           <thead>
             <tr>
               <th scope="col"><span class="visually-hidden">Feature</span></th>
-              <th scope="col" class="compare__brand">vochill</th>
+              <th scope="col" class="compare__brand">VoChill</th>
               <th scope="col" class="compare__alt">Typical alternative</th>
             </tr>
           </thead>
@@ -317,7 +379,7 @@
       </div>
 
       <div class="compare__cta">
-        <a class="btn btn--primary" href="#product">Get the Wine Chillers →</a>
+        <a class="btn btn--mint" href="#product">Get the Wine Chillers →</a>
         <p class="compare__note">30-Day Returns</p>
       </div>
     </div>
@@ -436,7 +498,10 @@
 <script src="js/cart-api.js"></script>
 <script src="js/cart-mock.js"></script>
 <script src="js/gallery.js"></script>
+<script src="js/colorselect.js"></script>
 <script src="js/accordion.js"></script>
 <script src="js/main.js"></script>
+<!-- QA overlay: inert unless the page is loaded with ?debug=1 -->
+<script src="js/debug-panel.js"></script>
 </body>
 </html>

@@ -48,6 +48,7 @@ gets a working page with a clean console.
 | 3 | Comparison table | mandatory |
 | 4 | FAQ accordion | chosen |
 | 5 | How It Works — 4 steps | chosen |
+| 6 | Reviews — rating summary + 3 cards | extra |
 
 The trust bar under the hero is included as well; at 69px it is too small to
 count as one of the five, but the hero reads wrong without it.
@@ -72,8 +73,10 @@ js/
   cart-api.js       Shopify AJAX Cart API request logic
   cart-mock.js      fetch-shaped mock transport (demo only)
   gallery.js        product image gallery
+  colorselect.js    the Color dropdown (ARIA listbox)
   accordion.js      FAQ accordion
   main.js           bootstrap + wiring
+  debug-panel.js    QA overlay, inert unless ?debug=1
 assets/images/      exported from Figma
 ```
 
@@ -131,6 +134,77 @@ USE_MOCK_CART: false   // cart-api.js now calls window.fetch against the real st
 
 …plus replacing `js/product-data.js` with the Liquid block quoted at the top of
 that file, which renders the real product and variant ids into the page.
+
+---
+
+---
+
+## How to test the simulated cart
+
+The request never reaches the network, so **the browser's Network tab shows
+nothing** — there is no entry to inspect, by design. Three ways to see it work:
+
+### 1. The built-in inspector (easiest)
+
+Append `?debug=1` to the URL:
+
+```
+https://assignment-tanuj-s-projects11.vercel.app/?debug=1
+```
+
+A panel appears bottom-right and records, in order:
+
+1. the exact `POST /cart/add.js` — headers and the serialised body
+2. the response — HTTP status and the parsed Shopify payload
+3. every `dataLayer` push as it happens, `view_item` and `add_to_cart`
+
+Add to cart and you can read the whole exchange without opening DevTools. The
+panel only observes: it wraps `cartApi.addToCart` and `dataLayer.push` the way
+a tag manager would, and is completely inert without the query parameter.
+
+### 2. The console
+
+```js
+window.dataLayer                                        // every event, in order
+window.dataLayer.filter(e => e.event === 'add_to_cart')  // should be one per successful add
+window.Digicom.config                                    // USE_MOCK_CART, currency, page variation
+window.Digicom.product.variants                          // the six variants and their ids
+```
+
+Fire a request by hand, bypassing the UI entirely:
+
+```js
+Digicom.cartApi.addToCart(
+  { variantId: 45329087452195, quantity: 2 },
+  Digicom.productSection.transport
+).then(console.log).catch(console.error);
+```
+
+### 3. Force the failure path
+
+The interesting half is that a *failed* add must not fire `add_to_cart`. In the
+console:
+
+```js
+Digicom.config.mock.failForVariantId = 45329087452195;  // then add that variant
+```
+
+The button reports the error inline, nothing is pushed to the dataLayer, and
+the console stays clean. Selecting **Couple Pair + 2 Chill Cradles** on the
+Stemmed style also hits a real 422 — that variant has 4 in stock.
+
+### 4. Against a real store
+
+Set `USE_MOCK_CART: false` in `js/config.js` and serve the page from the
+Shopify domain. `cart-api.js` is unchanged; it falls back to `window.fetch`
+and the request goes to the store's real `/cart/add.js`. The mock is never
+consulted, and the file can be deleted.
+
+### Automated
+
+```bash
+node test/cart-contract.test.js     # 32 assertions, no dependencies
+```
 
 ---
 
@@ -309,6 +383,16 @@ CART label, the step badges and the dark section's body copy — all three
 self-hosted as variable fonts (119KB total), so the page makes no third-party
 requests and renders identically offline.
 
+One substitution: the comparison table's column headers are set in **Studio
+Feixen Sans**, a commercial face that can't be redistributed. Inter carries the
+same treatment — 15px, 2.25px tracking, uppercase, `#444` — which is visually
+near-identical at that size. Everything else uses the design's actual faces.
+
+The product block has no quantity stepper, because the Figma has none: the pack
+option *is* the quantity choice. The cart request and both dataLayer payloads
+still carry an explicit `quantity`, so adding a stepper is a markup change, not
+a logic one.
+
 Two places where the design is internally inconsistent, and what I did:
 
 - The product block shows **$80.92 / $89.95 / Save $8.98**, but 89.95 − 80.92
@@ -352,22 +436,27 @@ covering the `/cart/add.js` request shape, both dataLayer events and the 404 /
 
 ## Time spent
 
-About 40 minutes of build time end to end (09:57–10:36), from an empty directory to the
-deployed page — design extraction, build, browser verification and this
-document. Adjust this line if you would rather count it differently.
+About 1 hour 10 minutes end to end (09:57–11:05), from an empty directory to the deployed
+page: roughly 40 minutes for the first build (design extraction, build, browser
+verification, deploy) and another 40 for the review pass — re-checking each
+section against the Figma, adding the variant badges, the Color dropdown, the
+Reviews section and the QA inspector, and correcting the comparison table's
+header treatment. Adjust this line if you would rather count it differently.
 
 ## Unfinished / known gaps
 
 - **Safari and Firefox are untested** (see above). This is the gap I would close
   first.
-- **Four of the nine sections were not built** — the problem section, the
-  reviews grid, "The Real Difference", and the floating testimonial card. The
-  brief asked for five; I built five plus the trust bar.
+- **Three of the nine sections were not built** — the "Sounds Familiar" problem
+  section, "The Real Difference", and the floating testimonial card. The brief
+  asked for five; there are six here plus the trust bar.
 - **The cart is write-only.** There is no cart drawer, line-item list or
   running total — the request succeeds, fires its event and reports inline.
   Nothing accumulates, because the brief scoped this to the add-to-cart call.
-- **Colour has one option (Quartz)**, as in the design. The option group is
-  modelled as a real third Shopify option, so more colours are data, not code.
+- **Colour has one option (Quartz)**, because that is all the design specifies.
+  The dropdown is a full ARIA listbox — keyboard navigation, `aria-selected`,
+  focus return, click-outside dismissal — so it is a working control with one
+  entry rather than a stub; more colours are data, not code.
 - **No automated accessibility audit.** Semantics were built in deliberately —
   radio groups for options, a real `<table>` for the comparison, generated
   `aria-expanded`/`aria-controls`, roving tabindex, a skip link, `role="status"`

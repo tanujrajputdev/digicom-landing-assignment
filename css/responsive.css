@@ -16,6 +16,12 @@
   --fs-body: clamp(1rem, 0.94rem + 0.2vw, 1.125rem);
 }
 
+/* The Figma sets h2 line-height to 100%, which is right for the single-line
+   desktop headings but too tight once they wrap. */
+@media (max-width: 900px) {
+  :root { --lh-h2: 1.15; }
+}
+
 /* ================================================================= 1200px */
 @media (max-width: 1200px) {
   .steps { gap: 24px; }
@@ -34,6 +40,8 @@
   }
 
   .product__grid { gap: var(--sp-6); }
+  .reviews__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .review { padding: 28px; }
   .product__tagline { font-size: 21px; }
   .compare__table tbody th { font-size: 19px; }
   .compare__yes, .compare__no { font-size: 17px; }
@@ -189,14 +197,20 @@
   .styleswitch__item,
   .chip { justify-content: flex-start; padding-inline: 14px; }
 
+  .chip.has-badge { padding-bottom: 18px; }
+
   .gallery__thumb { width: 64px; height: 64px; }
 
   /* Arrows are the only affordance on touch, so keep them visible. */
   .gallery__nav { opacity: 1; width: 38px; height: 38px; }
 
-  .qty { flex-wrap: wrap; gap: var(--sp-3) var(--sp-4); }
-
   .price { flex-wrap: wrap; gap: var(--sp-2) var(--sp-3); }
+
+  .reviews__grid { grid-template-columns: minmax(0, 1fr); }
+  .review__quote { font-size: 17px; line-height: 29px; }
+
+  /* Full-width chips keep their badge strip; the colour dropdown matches. */
+  .colorselect { max-width: none; }
 
   .product__tagline { font-size: 19px; }
 
@@ -232,7 +246,7 @@
 @media print {
   .gallery__nav,
   .atc,
-  .qty,
+  .qa,
   .skip-link { display: none !important; }
 
   .faq__panel { max-height: none !important; visibility: visible !important; }

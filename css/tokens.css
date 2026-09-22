@@ -30,6 +30,15 @@
   --c-yes:           #557373;  /* comparison: our column          */
   --c-no:            #c0c0c2;  /* comparison: alternative column  */
   --c-cell-line:     #ebebeb;
+  --c-cell-head:     #f8f8f5;  /* comparison header row fill */
+  --c-cell-head-ink: #444444;
+  --c-review-line:   #dddcd7;
+  --c-review-avatar: #5f9292;
+  --c-review-star:   #e7b51f;
+  --c-review-tagbg:  #f2f6f5;
+  --c-review-tagink: #3f7778;
+  --c-review-ink:    #1f1f1f;
+  --c-review-meta:   #4d4d4d;
   --c-label:         rgba(119, 120, 120, 0.6);
   --c-star:          #e8963f;
   --c-success:       #3d6b4a;
@@ -55,7 +64,7 @@
   --fs-2xs:      0.8125rem;  /* 13px — microcopy    */
 
   --lh-h1:       1.2;
-  --lh-h2:       1.25;
+  --lh-h2:       1;          /* Figma: line height 100% */
   --lh-body:     1.5556;     /* 28/18 */
   --lh-tight:    1.4;
 

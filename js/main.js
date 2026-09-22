@@ -8,7 +8,6 @@
 
   var VIEW_ITEM_VISIBILITY_RATIO = 0.25;
   var VIEW_ITEM_VIEWPORT_FILL = 0.5;
-  var MAX_QTY = 10;
 
   /* ---------------------------------------------------------------- utils */
 
@@ -57,8 +56,7 @@
     this.priceSave = root.querySelector('[data-price-save]');
     this.glassware = root.querySelector('[data-feature-glassware]');
     this.stockNote = root.querySelector('[data-stock-note]');
-    this.qtyInput = root.querySelector('[data-qty-input]');
-    this.qtyButtons = root.querySelectorAll('[data-qty-step]');
+    this.colorRoot = root.querySelector('[data-color-select]');
     this.addButton = root.querySelector('[data-add-to-cart]');
     this.statusEl = root.querySelector('[data-cart-status]');
     this.isSubmitting = false;
@@ -120,13 +118,13 @@
     return match;
   };
 
+  /*
+   * The Figma has no quantity stepper — the pack option is the quantity
+   * choice. Kept as a seam so the cart request and the dataLayer payload still
+   * carry an explicit quantity, and so a stepper is one change away.
+   */
   ProductSection.prototype.currentQuantity = function () {
-    var value = this.qtyInput ? parseInt(this.qtyInput.value, 10) : 1;
-    if (isNaN(value) || value < 1) value = 1;
-
-    var variant = this.currentVariant();
-    var ceiling = Math.min(MAX_QTY, variant ? variant.inventory : MAX_QTY);
-    return Math.min(value, ceiling);
+    return 1;
   };
 
   /* ------------------------------------------------------------ rendering */
@@ -161,23 +159,22 @@
           label: pack.label,
           image: self.packImage(pack.id),
           className: 'chip',
+          badge: pack.badge,
           checked: pack.id === self.selection.pack,
           disabled: !variant || variant.inventory < 1
         }));
       });
     }
 
-    if (this.colorList) {
-      this.product.colors.forEach(function (color) {
-        self.colorList.appendChild(self.buildOption({
-          group: 'color',
-          value: color.id,
-          label: color.label,
-          image: color.swatch,
-          className: 'chip chip--color',
-          checked: color.id === self.selection.color
-        }));
-      });
+    if (this.colorRoot && ns.ColorSelect) {
+      this.colorSelect = new ns.ColorSelect(
+        this.colorRoot,
+        this.product.colors,
+        function (colorId) {
+          self.selection.color = colorId;
+          self.sync();
+        }
+      );
     }
   };
 
@@ -205,6 +202,15 @@
     label.appendChild(input);
     label.appendChild(img);
     label.appendChild(text);
+
+    /* Merchandising strip along the bottom edge ("Most Popular"/"Best Value"). */
+    if (spec.badge) {
+      label.classList.add('has-badge');
+      var badge = el('span', 'chip__badge');
+      badge.textContent = spec.badge;
+      label.appendChild(badge);
+    }
+
     return label;
   };
 
@@ -243,19 +249,6 @@
       self.sync({ styleChanged: target.name === 'style' });
     });
 
-    Array.prototype.forEach.call(this.qtyButtons, function (button) {
-      button.addEventListener('click', function () {
-        var delta = parseInt(button.getAttribute('data-qty-step'), 10) || 0;
-        self.setQuantity(self.currentQuantity() + delta);
-      });
-    });
-
-    if (this.qtyInput) {
-      this.qtyInput.addEventListener('change', function () {
-        self.setQuantity(self.currentQuantity());
-      });
-    }
-
     /* Hero buttons deep-link into a specific style. */
     Array.prototype.forEach.call(
       document.querySelectorAll('[data-hero-style]'),
@@ -270,18 +263,6 @@
         });
       }
     );
-  };
-
-  ProductSection.prototype.setQuantity = function (value) {
-    var variant = this.currentVariant();
-    var ceiling = Math.min(MAX_QTY, variant ? variant.inventory : MAX_QTY);
-    var next = Math.max(1, Math.min(value, ceiling));
-
-    if (this.qtyInput) {
-      this.qtyInput.value = next;
-      this.qtyInput.max = ceiling;
-    }
-    return next;
   };
 
   /* ------------------------------------------------- reflect current state */
@@ -343,8 +324,6 @@
     if (this.addButton) {
       this.addButton.disabled = !variant || variant.inventory < 1;
     }
-
-    this.setQuantity(this.currentQuantity());
 
     if (settings.styleChanged && this.gallery) {
       this.gallery.setSlides(this.product.gallery[this.selection.style] || []);

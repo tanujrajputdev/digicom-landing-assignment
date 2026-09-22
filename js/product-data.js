@@ -54,11 +54,14 @@
     }
   ];
 
-  /* Option 2 — pack size. */
+  /*
+   * Option 2 — pack size. `badge` renders the merchandising strip along the
+   * bottom edge of the chip ("Most Popular" / "Best Value" in the design).
+   */
   var PACKS = [
-    { id: 'single',    label: 'Single',                        headingWord: 'Single' },
-    { id: 'pair',      label: 'Couple Pair',                   headingWord: 'Pair'   },
-    { id: 'pair-plus', label: 'Couple Pair + 2 Chill Cradles',  headingWord: 'Pair + Cradles' }
+    { id: 'single',    label: 'Single',                       headingWord: 'Single',        badge: null },
+    { id: 'pair',      label: 'Couple Pair',                  headingWord: 'Pair',          badge: 'Most Popular' },
+    { id: 'pair-plus', label: 'Couple Pair + 2 Chill Cradles', headingWord: 'Pair + Cradles', badge: 'Best Value' }
   ];
 
   ns.product = {

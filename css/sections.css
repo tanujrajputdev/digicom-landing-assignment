@@ -320,6 +320,114 @@
   cursor: not-allowed;
 }
 
+/* Merchandising strip along the chip's bottom edge. The chip grows by the
+   strip's height so the label stays centred in the original 52px box. */
+.chip.has-badge {
+  min-height: 67px;
+  padding-bottom: 15px;
+}
+
+.chip__badge {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  left: -1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  background: var(--c-mint);
+  border: 1px solid var(--c-primary);
+  border-top: 0;
+  font-family: var(--ff-display);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--c-heading);
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------- colour dropdown (1:204) */
+
+.colorselect { position: relative; max-width: 220px; }
+
+.colorselect__button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 52px;
+  padding: 2px 12px 2px 2px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-primary);
+  border-radius: 2px;
+  text-align: left;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.colorselect__button img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.colorselect__value {
+  flex: 1;
+  font-family: var(--ff-display);
+  font-size: 18px;
+  line-height: 1.27;
+  color: var(--c-ink);
+}
+
+/* Caret, drawn rather than shipped as an image so it can take currentColor. */
+.colorselect__caret {
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  border-inline: 5px solid transparent;
+  border-top: 6px solid var(--c-ink);
+  transition: transform var(--dur) var(--ease);
+}
+
+.colorselect.is-open .colorselect__caret { transform: rotate(180deg); }
+
+.colorselect__list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  padding: 4px;
+  background: var(--c-surface);
+  border: 1px solid var(--c-primary);
+  border-radius: 2px;
+  box-shadow: var(--shadow-card);
+}
+
+.colorselect__option {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 8px 4px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: var(--ff-display);
+  font-size: 18px;
+  color: var(--c-ink);
+}
+
+.colorselect__option img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.colorselect__option:hover,
+.colorselect__option:focus-visible { background: var(--c-mint-soft); }
+
+.colorselect__option.is-selected { background: #f6f8f8; }
+
 .chip--color {
   flex: 0 1 165px;
   background: var(--c-surface);
@@ -334,7 +442,7 @@
   color: var(--c-label);
 }
 
-.option__chips { display: flex; gap: 8px; }
+.option__chips { display: flex; align-items: flex-start; gap: 8px; }
 
 .product__title {
   font-weight: 500;
@@ -345,7 +453,7 @@
   font-family: var(--ff-display);
   font-style: italic;
   font-size: 25px;
-  line-height: 1.12;
+  line-height: 1;
   color: #000;
 }
 
@@ -427,56 +535,9 @@
   color: var(--c-accent);
 }
 
-/* ------------------------------------------------------------ quantity */
-
-.qty {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-4);
-}
-
-.qty .option__label { margin-bottom: 0; }
-
-.qty__control {
-  display: inline-flex;
-  align-items: center;
-  height: 52px;
-  border: 1px solid #d8d9d0;
-  border-radius: 2px;
-  background: var(--c-surface);
-}
-
-.qty__step {
-  width: 44px;
-  height: 100%;
-  background: none;
-  border: 0;
-  color: var(--c-heading);
-  font-size: var(--fs-body);
-  line-height: 1;
-}
-
-.qty__step:hover { color: var(--c-primary); }
-
-.qty__input {
-  width: 52px;
-  height: 100%;
-  border: 0;
-  border-inline: 1px solid #efece7;
-  background: none;
-  text-align: center;
-  font-size: var(--fs-sm);
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
-.qty__input::-webkit-outer-spin-button,
-.qty__input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.qty__stock {
+.stocknote {
+  min-height: 20px;
+  margin-top: -14px;
   font-size: var(--fs-2xs);
   color: var(--c-error);
 }
@@ -634,6 +695,8 @@
 
 .btn--mint {
   min-width: 300px;
+  min-height: 54px;
+  padding: 14.62px 43.85px;
   background: var(--c-mint);
   border-radius: var(--r-sm);
   color: var(--c-ink);
@@ -673,30 +736,30 @@
   vertical-align: middle;
 }
 
-.compare__table colgroup,
 .compare__table thead th {
-  background: transparent;
-  border: 0;
   height: 71px;
-  padding-block: 23px;
+  padding: 20px 22px;
+  background: var(--c-cell-head);
+  border: 1px solid var(--c-cell-line);
+  /* Studio Feixen Sans in the Figma — a commercial face that isn't
+     redistributable, so Inter carries the same 15px / 2.25px-tracked
+     uppercase treatment. */
+  font-family: var(--ff-body);
+  font-size: 15px;
+  line-height: 25px;
+  letter-spacing: 2.25px;
+  text-transform: uppercase;
+  color: var(--c-cell-head-ink);
 }
+
+.compare__table thead th:first-child { border-top-left-radius: var(--r-md); }
+.compare__table thead th:last-child  { border-top-right-radius: var(--r-md); }
 
 .compare__table th:first-child { width: 46.2%; }
 .compare__table th:not(:first-child) { width: 26.9%; }
 
-.compare__brand {
-  color: var(--c-primary);
-  font-family: var(--ff-body);
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.compare__alt {
-  color: var(--c-no);
-  font-family: var(--ff-alt);
-  font-size: 20px;
-  font-weight: 400;
-}
+.compare__brand { font-weight: 700; }
+.compare__alt   { font-weight: 400; }
 
 .compare__table tbody th {
   font-size: 22px;
@@ -721,8 +784,137 @@
 }
 
 .compare__note {
+  font-size: var(--fs-sm);
+  line-height: 25px;
+  color: var(--c-heading);
+}
+
+/* ================================================= reviews (node 1:59) == */
+
+.reviews { background: var(--c-bg); }
+
+.reviews__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-3);
+  text-align: center;
+}
+
+.reviews__score {
+  display: flex;
+  align-items: flex-end;
+  gap: 17px;
+}
+
+.reviews__average {
+  font-family: var(--ff-display);
+  font-size: var(--fs-h2);
+  line-height: 1;
+  color: #2c2c2a;
+}
+
+.reviews__scoremeta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+}
+
+.reviews__scoremeta img { height: 21px; width: auto; }
+
+.reviews__scoremeta p {
+  font-size: var(--fs-2xs);
+  line-height: 1.2;
+  color: #2c2c2a;
+}
+
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 34px;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 36px;
+  background: var(--c-surface);
+  border: 0.8px solid var(--c-review-line);
+  border-radius: 22px;
+}
+
+.review__person {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 18px;
+}
+
+.review__avatar {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  background: var(--c-review-avatar);
+  border-radius: var(--r-pill);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0.8px;
+}
+
+.review__name {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  line-height: 19.2px;
+  letter-spacing: 0.8px;
+  color: var(--c-review-ink);
+}
+
+.review__verified {
+  padding-top: 2px;
   font-size: var(--fs-xs);
-  color: var(--c-body);
+  line-height: 17.5px;
+  letter-spacing: 0.8px;
+  color: var(--c-review-meta);
+}
+
+.review__stars {
+  padding-bottom: 20px;
+  font-size: var(--fs-base);
+  line-height: 16px;
+  letter-spacing: 1px;
+  color: var(--c-review-star);
+}
+
+.review__tag {
+  display: inline-flex;
+  padding: 7px 14px;
+  margin-bottom: 22px;
+  background: var(--c-review-tagbg);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--c-review-tagink);
+}
+
+.review__quote {
+  margin: 0;
+  /* Georgia italic in the design — a system face, so it needs no download. */
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 19px;
+  line-height: 32.3px;
+  letter-spacing: 0.8px;
+  color: var(--c-review-ink);
 }
 
 /* ==================================================== faq (node 1:255) == */
