@@ -383,6 +383,16 @@ CART label, the step badges and the dark section's body copy — all three
 self-hosted as variable fonts (119KB total), so the page makes no third-party
 requests and renders identically offline.
 
+Every text style was re-read from its Figma node and diffed against the
+computed CSS in the browser. That pass caught seven mismatches, all now
+corrected: the FAQ heading is **Nunito**, not the display serif used by every
+other heading (node 1:259); section sub-heads are **15px**, not 18; the pack
+chip label is **14px**, not fluid up to 16; and the italic heading accent uses
+a *different weight and colour in each of the three places it appears* — Bold
+Italic `#5d8485` in the hero, Regular Italic `#3d5f60` in the comparison,
+Medium Italic `#5d8485` in How It Works. The How It Works sub-head is white at
+65%, and the mint CTA label is Medium, not SemiBold.
+
 One substitution: the comparison table's column headers are set in **Studio
 Feixen Sans**, a commercial face that can't be redistributed. Inter carries the
 same treatment — 15px, 2.25px tracking, uppercase, `#444` — which is visually
@@ -413,10 +423,24 @@ shopper switches style.
 ## Browsers and screen sizes tested
 
 **Verified** — Chrome 153 on macOS (headless, driven over the DevTools
-Protocol). Tested at **320, 360, 390, 414, 480, 540, 640, 720, 768, 800, 820,
-860, 900, 1024, 1180, 1280, 1440, 1600 and 1920px**: no horizontal overflow at
-any width, and zero console messages, exceptions or failed requests across the
-whole sweep.
+Protocol), across **29 real device widths from 280px (Galaxy Fold) to 2560px
+(QHD)**: 280, 320, 360, 375, 390, 393, 412, 414, 430, 480, 540, 600, 640, 720,
+768, 810, 820, 834, 900, 1024, 1180, 1280, 1366, 1440, 1512, 1600, 1728, 1920,
+2560.
+
+At every one of those widths the audit checks four things: horizontal overflow,
+text rendering below 12px, interactive elements under 40px, and content
+clipped inside its own container. The result is clean — no overflow anywhere,
+no clipping, and every tap target at or above 44px except the inline "238
+Reviews" text link, which WCAG 2.5.8 exempts as inline. The one sub-12px value
+is the step badge at 11px, which is what the Figma specifies (10.856px).
+
+Two issues the sweep caught and fixed: the buybox overflowed its column by 19px
+between roughly 860 and 1000px (the option chips now wrap instead of
+squeezing, which removes the failure mode rather than patching that band), and
+the gallery arrows were 38px on touch, below the comfortable minimum.
+
+Zero console messages, exceptions or failed requests across the whole sweep.
 
 Interaction paths verified in-browser: gallery thumb + arrows + style rebuild,
 accordion single-open, variant and pack switching, quantity clamping to
@@ -463,3 +487,6 @@ header treatment. Adjust this line if you would rather count it differently.
   on the cart message — but I did not run axe or a screen reader over it.
 - **`preload` covers only Inter and Cormorant**, not Nunito, which is used
   below the fold.
+- **No footer.** The Figma's footer is a flat image rather than laid-out
+  content, so there was nothing to reproduce faithfully; the page ends on the
+  FAQ.

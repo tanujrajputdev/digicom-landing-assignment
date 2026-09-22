@@ -156,8 +156,14 @@ table {
   line-height: var(--lh-h2);
 }
 
-/* The display face's italic is used as an in-headline accent. The hero
-   sets it bold; section headings use the regular italic in brand teal. */
+/*
+ * The display face's italic is the in-headline accent, and the Figma uses a
+ * different weight and colour in each of the three places it appears:
+ *   hero (1:13)        Cormorant Bold Italic 700, #5d8485
+ *   comparison (1:85)  Cormorant Italic 400,      #3d5f60
+ *   how it works (1:98) Cormorant Medium Italic 500, #5d8485
+ * The per-section overrides live in sections.css.
+ */
 .h1 em {
   font-style: italic;
   font-weight: 700;
@@ -179,8 +185,8 @@ table {
 .section__head .h2 { margin-bottom: var(--sp-3); }
 
 .section__sub {
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
+  font-size: var(--fs-sub);
+  line-height: 25px;
   color: var(--c-body);
 }
 

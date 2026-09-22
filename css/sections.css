@@ -239,13 +239,15 @@
 
 .styleswitch__list {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .styleswitch__item,
 .chip {
   position: relative;
-  flex: 1 1 0;
+  flex: 1 1 128px;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -283,15 +285,16 @@
 .styleswitch__item span {
   font-family: var(--ff-display);
   font-size: clamp(15px, 1.2vw, 18px);
-  line-height: 1.18;
+  line-height: 1.27;   /* 22.913 / 18 */
   text-wrap: balance;
 }
 
-.chip span {
+/* :not() keeps this off the badge span, which has its own smaller treatment. */
+.chip span:not(.chip__badge) {
   font-family: var(--ff-display);
-  font-size: clamp(14px, 1.05vw, 16px);
+  font-size: 14px;     /* Figma 1:193 — fixed, not fluid */
   font-weight: 600;
-  line-height: 1.22;
+  line-height: 1.43;   /* 20px, the two-line value from 1:201 */
   text-wrap: balance;
 }
 
@@ -442,7 +445,15 @@
   color: var(--c-label);
 }
 
-.option__chips { display: flex; align-items: flex-start; gap: 8px; }
+/* Wrapping rather than squeezing: the buybox is a fraction of the content
+   column, so at mid widths three chips cannot sit on one row. They reflow
+   instead of overflowing, which holds at any width without a breakpoint. */
+.option__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+}
 
 .product__title {
   font-weight: 500;
@@ -467,7 +478,9 @@
 .product__rating img { height: 21px; width: auto; }
 
 .product__rating a {
-  color: var(--c-heading);
+  display: inline-block;
+  padding-block: 4px;
+  color: #000;
   text-decoration-color: var(--c-line);
   text-underline-offset: 3px;
 }
@@ -620,8 +633,15 @@
 }
 
 .howitworks .h2 { color: #fff; }
-.howitworks .h2 em { color: #a3c9c7; }
-.howitworks .section__sub { color: #b9b7b2; font-size: var(--fs-sm); }
+
+/* Figma 1:98 — Cormorant Medium Italic, brand accent (not the mint). */
+.howitworks .h2 em {
+  font-weight: 500;
+  color: var(--c-accent);
+}
+
+/* Figma 1:99 — 15px, white at 65%. */
+.howitworks .section__sub { color: rgba(255, 255, 255, 0.65); }
 
 .steps {
   display: grid;
@@ -700,7 +720,7 @@
   background: var(--c-mint);
   border-radius: var(--r-sm);
   color: var(--c-ink);
-  font-weight: 600;
+  font-weight: 500;    /* Figma 1:91 */
 }
 
 .btn--mint:hover { background: #89d5d3; }
@@ -921,6 +941,16 @@
 
 .faq { background: var(--c-bg); }
 
+/*
+ * The Figma sets this one heading in Nunito Regular rather than the display
+ * serif used by every other section heading (node 1:259). Reproduced as drawn.
+ */
+.faq .h2 {
+  font-family: var(--ff-alt);
+  font-weight: 400;
+  color: #000;
+}
+
 .faq__list {
   display: flex;
   flex-direction: column;
@@ -1008,28 +1038,4 @@
   font-size: var(--fs-sm);
   line-height: 1.7;
   color: var(--c-body);
-}
-
-/* ================================================================ footer */
-
-.footer {
-  padding-block: 56px;
-  background: var(--c-primary);
-  color: rgba(255, 255, 255, 0.85);
-  text-align: center;
-}
-
-.footer__inner { display: grid; gap: var(--sp-2); }
-
-.footer__brand {
-  font-family: var(--ff-display);
-  font-size: 32px;
-  color: #fff;
-}
-
-.footer__note { font-size: var(--fs-xs); }
-
-.footer__disclaimer {
-  font-size: var(--fs-2xs);
-  color: rgba(255, 255, 255, 0.6);
 }
