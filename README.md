@@ -77,7 +77,8 @@ js/
   accordion.js      FAQ accordion
   main.js           bootstrap + wiring
   debug-panel.js    QA overlay, inert unless ?debug=1
-assets/images/      exported from Figma
+assets/images/      exported from Figma (WebP, with JPEG/PNG fallbacks
+                    only where a <picture> element uses them)
 ```
 
 ---
