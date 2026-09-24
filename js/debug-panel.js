@@ -121,8 +121,6 @@
     log.scrollTop = log.scrollHeight;
   }
 
-  /* ------------------------------------------- tee the cart request/response */
-
   function wrapCartApi() {
     var original = ns.cartApi.addToCart;
 
@@ -156,8 +154,6 @@
       return original.call(ns.cartApi, options, spy);
     };
   }
-
-  /* ----------------------------------------------- observe every dataLayer push */
 
   function wrapDataLayer() {
     window.dataLayer = window.dataLayer || [];

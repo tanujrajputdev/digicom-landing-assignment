@@ -33,8 +33,6 @@
     this.bindControls();
   }
 
-  /* ------------------------------------------------------------ slides */
-
   /**
    * Replace every slide and reset to the first one.
    * @param {Array<{src: string, alt: string}>} slides
@@ -79,8 +77,6 @@
       img.src = thumb.getAttribute('data-src');
     });
   };
-
-  /* ------------------------------------------------------------ events */
 
   Gallery.prototype.bindControls = function () {
     var self = this;
@@ -144,8 +140,6 @@
 
     if (handled) event.preventDefault();
   };
-
-  /* --------------------------------------------------------- selection */
 
   Gallery.prototype.step = function (delta, options) {
     if (!this.thumbs.length) return;

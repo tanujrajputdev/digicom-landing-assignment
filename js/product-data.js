@@ -78,7 +78,6 @@
     selectedVariantId: 45329087452195,
 
     variants: [
-      /* --------------------------------------------------------- stemless */
       { id: 45329087452194, style: 'stemless', pack: 'single',    color: 'quartz',
         title: 'Stemless / Single / Quartz',
         sku: 'VC-STMLS-SGL-QTZ', price: 40.46, compareAt: 44.95, inventory: 24 },
@@ -91,7 +90,6 @@
         title: 'Stemless / Couple Pair + 2 Chill Cradles / Quartz',
         sku: 'VC-STMLS-PRC-QTZ', price: 107.92, compareAt: 119.95, inventory: 9 },
 
-      /* ---------------------------------------------------------- stemmed */
       { id: 45329087452197, style: 'stemmed',  pack: 'single',    color: 'quartz',
         title: 'Stemmed / Single / Quartz',
         sku: 'VC-STMD-SGL-QTZ',  price: 40.46, compareAt: 44.95, inventory: 31 },
@@ -104,7 +102,6 @@
         title: 'Stemmed / Couple Pair + 2 Chill Cradles / Quartz',
         sku: 'VC-STMD-PRC-QTZ',  price: 107.92, compareAt: 119.95, inventory: 4 },
 
-      /* ------------------------------------------- midnight (+$4 finish) */
       { id: 45329087452200, style: 'stemless', pack: 'single',    color: 'midnight',
         title: 'Stemless / Single / Midnight',
         sku: 'VC-STMLS-SGL-MID', price: 44.46, compareAt: 48.95, inventory: 16 },

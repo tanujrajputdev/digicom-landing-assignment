@@ -9,8 +9,6 @@
   var VIEW_ITEM_VISIBILITY_RATIO = 0.25;
   var VIEW_ITEM_VIEWPORT_FILL = 0.5;
 
-  /* ---------------------------------------------------------------- utils */
-
   function el(tag, className, attrs) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -38,8 +36,6 @@
     list.forEach(function (item) { if (item.id === id) found = item; });
     return found;
   }
-
-  /* ----------------------------------------------------- product section */
 
   function ProductSection(root) {
     var product = ns.product;
@@ -126,8 +122,6 @@
   ProductSection.prototype.currentQuantity = function () {
     return 1;
   };
-
-  /* ------------------------------------------------------------ rendering */
 
   /*
    * Options render as real radio inputs. Radio groups give keyboard
@@ -224,8 +218,6 @@
     return match;
   };
 
-  /* --------------------------------------------------------------- events */
-
   ProductSection.prototype.bind = function () {
     var self = this;
 
@@ -264,8 +256,6 @@
       }
     );
   };
-
-  /* ------------------------------------------------- reflect current state */
 
   ProductSection.prototype.sync = function (options) {
     var settings = options || {};
@@ -344,8 +334,6 @@
     this.addButton.classList.toggle('is-loading', isLoading);
   };
 
-  /* ------------------------------------------------------ add to cart flow */
-
   ProductSection.prototype.submit = function () {
     if (this.isSubmitting) return;
 
@@ -392,8 +380,6 @@
     });
   };
 
-  /* ------------------------------------------------------ view_item trigger */
-
   ProductSection.prototype.observeForViewItem = function () {
     var self = this;
 
@@ -436,8 +422,6 @@
 
     observer.observe(this.root);
   };
-
-  /* --------------------------------------------------------------- boot */
 
   function init() {
     ns.accordion.init();

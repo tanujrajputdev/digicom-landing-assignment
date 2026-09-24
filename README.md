@@ -1,282 +1,14 @@
-# Digicom — Landing Page Assignment
+# VoChill Landing Page
 
-A hand-built recreation of selected sections from the Digicom Figma landing page.
-No frameworks, no build step, no dependencies — open `index.html` and it runs.
+A build of six sections from the Digicom Figma file, in vanilla HTML, CSS and
+JavaScript. No frameworks, no build step, no runtime dependencies.
 
-- **Hosted preview:** https://assignment-tanuj-s-projects11.vercel.app
+- **Live preview:** https://assignment-tanuj-s-projects11.vercel.app
 - **Mirror:** https://tanujrajputdev.github.io/digicom-landing-assignment/
 - **Source:** https://github.com/tanujrajputdev/digicom-landing-assignment
+- **Cart inspector:** add `?debug=1` to the preview URL
 
-Both hosts serve the same commit. Verified in real Chrome against the live
-URLs: zero console messages, zero exceptions, zero failed requests, and the
-dataLayer events firing in the right order.
-
----
-
-## Running it
-
-```bash
-# any static server works; the page also opens fine straight from the filesystem
-python3 -m http.server 8000
-# → http://localhost:8000
-```
-
-Run the headless contract test (no dependencies, Node only):
-
-```bash
-node test/cart-contract.test.js
-# 32 passed, 0 failed
-```
-
-It asserts the `/cart/add.js` request shape, both dataLayer payloads, the
-once-per-load `view_item` guard, and that the 404 and 422 failure paths push
-nothing to the dataLayer.
-
-Scripts are plain classic `<script>` tags rather than ES modules, specifically so
-that opening `index.html` directly off the filesystem (`file://`) works without
-CORS errors. A reviewer unzipping the submission and double-clicking the file
-gets a working page with a clean console.
-
----
-
-## Sections built
-
-| # | Section | Required |
-|---|---------|----------|
-| 1 | Hero | mandatory |
-| 2 | Product — gallery, variant picker, quantity, add to cart | mandatory |
-| 3 | Comparison table | mandatory |
-| 4 | FAQ accordion | chosen |
-| 5 | How It Works — 4 steps | chosen |
-| 6 | Reviews — rating summary + 3 cards | extra |
-
-The trust bar under the hero is included as well; at 69px it is too small to
-count as one of the five, but the hero reads wrong without it.
-
-Source design: `VoChill - Multi variant LP`, node `1:5` — a 1600 x 8484 frame.
-
----
-
-## File layout
-
-```
-index.html
-css/
-  tokens.css        design tokens lifted from Figma (type scale, colour, spacing)
-  base.css          reset + element defaults
-  sections.css      per-section layout
-  responsive.css    mobile/tablet adaptation
-js/
-  config.js         USE_MOCK_CART switch, currency, page-variation resolver
-  product-data.js   the product object (+ the Liquid that would replace it)
-  analytics.js      dataLayer, view_item, add_to_cart
-  cart-api.js       Shopify AJAX Cart API request logic
-  cart-mock.js      fetch-shaped mock transport (demo only)
-  gallery.js        product image gallery
-  colorselect.js    the Color dropdown (ARIA listbox)
-  accordion.js      FAQ accordion
-  main.js           bootstrap + wiring
-  debug-panel.js    QA overlay, inert unless ?debug=1
-assets/images/      exported from Figma (WebP, with JPEG/PNG fallbacks
-                    only where a <picture> element uses them)
-```
-
----
-
-## Gallery and accordion
-
-Both are written from scratch; no slider or accordion library is used.
-
-**Gallery** (`js/gallery.js`) — thumbnail rail drives a main stage image.
-Click, arrow keys, `Home`/`End`, and horizontal swipe all navigate. The thumb
-strip uses a roving `tabindex` so the gallery is a single tab stop, and every
-image is preloaded on init so switching never flashes or shifts layout.
-
-**Accordion** (`js/accordion.js`) — `aria-expanded`, `aria-controls`,
-`role="region"` and `aria-labelledby` are wired at runtime, with ids generated
-if the markup doesn't supply them. `ArrowUp`/`ArrowDown`/`Home`/`End` move
-between headers. Panels animate via measured `max-height`, which is released to
-`none` on `transitionend` so an open panel can still reflow (font swap, resize)
-without clipping. Respects `prefers-reduced-motion`.
-
----
-
-## Simulated add to cart
-
-The requirement is to show the *intended* Shopify integration, so the request
-logic and the mock live in separate files and neither imports the other.
-
-**`js/cart-api.js`** is what would ship to a live storefront, unchanged:
-
-```js
-send('/cart/add.js', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-  body: JSON.stringify({ items: [{ id: variantId, quantity: quantity }] })
-})
-```
-
-It takes a `transport` argument with the same signature as `window.fetch`, and
-falls back to `window.fetch` when none is passed. It has no knowledge that a
-mock exists. Non-2xx responses are parsed and rethrown as a `CartError`
-carrying Shopify's `status` / `message` / `description`.
-
-**`js/cart-mock.js`** implements that same fetch contract — it returns a promise
-of an object with `.ok`, `.status` and `.json()`. It simulates latency and
-returns realistic payloads: a Shopify line item on success (prices as integer
-minor units, `variant_id`, `key`, `line_price`), a `422` when quantity exceeds
-inventory, and a `404` for an unknown variant.
-
-**Going live** is one line in `js/config.js`:
-
-```js
-USE_MOCK_CART: false   // cart-api.js now calls window.fetch against the real store
-```
-
-…plus replacing `js/product-data.js` with the Liquid block quoted at the top of
-that file, which renders the real product and variant ids into the page.
-
----
-
----
-
-## How to test the simulated cart
-
-The request never reaches the network, so **the browser's Network tab shows
-nothing** — there is no entry to inspect, by design. Three ways to see it work:
-
-### 1. The built-in inspector (easiest)
-
-Append `?debug=1` to the URL:
-
-```
-https://assignment-tanuj-s-projects11.vercel.app/?debug=1
-```
-
-A panel appears bottom-right and records, in order:
-
-1. the exact `POST /cart/add.js` — headers and the serialised body
-2. the response — HTTP status and the parsed Shopify payload
-3. every `dataLayer` push as it happens, `view_item` and `add_to_cart`
-
-Add to cart and you can read the whole exchange without opening DevTools. The
-panel only observes: it wraps `cartApi.addToCart` and `dataLayer.push` the way
-a tag manager would, and is completely inert without the query parameter.
-
-### 2. The console
-
-```js
-window.dataLayer                                        // every event, in order
-window.dataLayer.filter(e => e.event === 'add_to_cart')  // should be one per successful add
-window.Digicom.config                                    // USE_MOCK_CART, currency, page variation
-window.Digicom.product.variants                          // the six variants and their ids
-```
-
-Fire a request by hand, bypassing the UI entirely:
-
-```js
-Digicom.cartApi.addToCart(
-  { variantId: 45329087452195, quantity: 2 },
-  Digicom.productSection.transport
-).then(console.log).catch(console.error);
-```
-
-### 3. Force the failure path
-
-The interesting half is that a *failed* add must not fire `add_to_cart`. In the
-console:
-
-```js
-Digicom.config.mock.failForVariantId = 45329087452195;  // then add that variant
-```
-
-The button reports the error inline, nothing is pushed to the dataLayer, and
-the console stays clean. Selecting **Couple Pair + 2 Chill Cradles** on the
-Stemmed style also hits a real 422 — that variant has 4 in stock.
-
-### 4. Against a real store
-
-Set `USE_MOCK_CART: false` in `js/config.js` and serve the page from the
-Shopify domain. `cart-api.js` is unchanged; it falls back to `window.fetch`
-and the request goes to the store's real `/cart/add.js`. The mock is never
-consulted, and the file can be deleted.
-
-### Automated
-
-```bash
-node test/cart-contract.test.js     # 32 assertions, no dependencies
-```
-
----
-
-## dataLayer events
-
-`window.dataLayer` is initialised in `js/analytics.js` before anything can push
-to it. Both events use GA4 ecommerce shape, and each push is preceded by
-`dataLayer.push({ ecommerce: null })` so fields from the previous event can't
-leak into the next one.
-
-Every payload carries `page_variation` — the displayed page variation, resolved
-from `?variation=` and defaulting to `control` — so events can be split by
-experiment arm downstream.
-
-### `view_item`
-
-Fires **once per page load**, when the product section first becomes visible.
-An `IntersectionObserver` at a 0.25 visibility threshold watches the product
-section and `disconnect()`s the moment it fires; a module-level flag in
-`analytics.js` guards the event a second time, so the event is safe even if the
-observer is rebound.
-
-```js
-{
-  event: 'view_item',
-  page_variation: 'control',
-  ecommerce: {
-    currency: 'USD',
-    value: 129.00,
-    items: [{
-      item_id: '45329087452193',
-      item_name: 'Product name',
-      item_brand: 'Digicom',
-      item_variant: 'Variant title',
-      price: 129.00,
-      quantity: 1,
-      currency: 'USD'
-    }]
-  }
-}
-```
-
-### `add_to_cart`
-
-Fires **only after the cart request resolves successfully** — it lives inside
-the `.then()` of the settled promise, never on button click and never
-optimistically. A failed add takes the `.catch()` branch, renders an inline
-error, and pushes nothing.
-
-`value` is the line total (unit price × quantity), not the unit price.
-
-```js
-{
-  event: 'add_to_cart',
-  page_variation: 'control',
-  event_id: '9f1c2f7e-...',        // deduplication key, see below
-  ecommerce: {
-    currency: 'USD',
-    value: 258.00,                 // 129.00 × 2
-    items: [{
-      item_id: '45329087452193',
-      item_name: 'Product name',
-      item_brand: 'Digicom',
-      item_variant: 'Variant title',
-      price: 129.00,               // unit price
-      quantity: 2,
-      currency: 'USD'
-    }]
-  }
-}
-```
+Source design: `VoChill - Multi variant LP`, node `1:5`, a 1600 × 8484 frame.
 
 ---
 
@@ -284,18 +16,18 @@ error, and pushes nothing.
 
 ### Mapping `add_to_cart` to Meta `AddToCart`
 
-A GTM Custom HTML (or Meta Pixel) tag fires on the `add_to_cart` Custom Event
-trigger and reads from the same dataLayer object:
+A GTM tag fires on the `add_to_cart` Custom Event trigger and reads the same
+dataLayer object the page pushes.
 
-| dataLayer path | Meta parameter | Notes |
+| dataLayer | Meta parameter | Note |
 |---|---|---|
-| `ecommerce.items[].item_id` | `content_ids` | array, one entry per line item |
-| `ecommerce.items[]` `{item_id, quantity}` | `contents` | `[{ id, quantity }]` — carries quantity, which `content_ids` cannot |
-| `ecommerce.items[].item_name` | `content_name` | |
+| `items[].item_id` | `content_ids` | array, one entry per line item |
+| `items[]` id + qty | `contents` | carries quantity, which `content_ids` cannot |
+| `items[].item_name` | `content_name` | |
 | `ecommerce.value` | `value` | line total, numeric, never a formatted string |
 | `ecommerce.currency` | `currency` | ISO-4217, must accompany `value` |
 | — | `content_type` | constant `'product'` |
-| `event_id` | `eventID` | dedup key, see below |
+| `event_id` | `eventID` | deduplication key, see below |
 
 ```js
 fbq('track', 'AddToCart', {
@@ -308,189 +40,307 @@ fbq('track', 'AddToCart', {
 }, { eventID: event_id });
 ```
 
-**The ID detail that actually matters.** `content_ids` has to match the `id`
-column of the Meta product catalog, or Advantage+ catalog ads and dynamic
-retargeting silently fail to match — the events land, the attribution doesn't.
-Shopify's Meta sales channel feeds the catalog using the **variant** id, so this
-implementation sends `variant_id`, not `product_id`. Some feeds instead
-namespace it as `shopify_<country>_<product_id>_<variant_id>`. Before shipping,
-open Commerce Manager → Catalog → Items, copy one real id, and confirm the
-format matches what the pixel sends.
+**The ID detail that matters.** `content_ids` has to match the ID column of the
+Meta product catalog, or dynamic retargeting silently fails to match: the events
+land, the attribution doesn't. Shopify's Meta sales channel feeds the catalog
+using the **variant** ID, so this sends `variant_id`, not `product_id`. Some
+feeds namespace it as `shopify_<country>_<product_id>_<variant_id>` instead.
+Before shipping, open Commerce Manager, copy one real ID, and confirm the format
+matches what the pixel sends.
 
 ### Verifying it fires correctly
 
-1. **GTM Preview** — add to cart, confirm exactly one `add_to_cart` message in
-   the timeline, the Meta tag fired on it, and the Variables tab resolves
-   `value`, `currency` and `content_ids` to real values rather than `undefined`.
-2. **Meta Pixel Helper** — confirms `AddToCart` with its parameters in-page.
-3. **Events Manager → Test Events** — the authoritative check. Meta shows the
-   received payload and flags missing or malformed parameters, which Pixel
-   Helper does not.
-4. **Network tab** — filter `facebook.com/tr`, look for `ev=AddToCart` and read
+1. **GTM Preview** — one `add_to_cart` message per add, the Meta tag fired on it,
+   and the Variables tab resolving `value`, `currency` and `content_ids` to real
+   values rather than `undefined`.
+2. **Meta Pixel Helper** — confirms `AddToCart` and its parameters in-page.
+3. **Events Manager → Test Events** — the authoritative check. Shows the received
+   payload and flags malformed parameters that Pixel Helper does not.
+4. **Network tab** — filter `facebook.com/tr`, read `ev=AddToCart` and
    `cd[value]`, `cd[currency]`, `cd[content_ids]` off the query string.
-5. **Negative tests, the ones usually skipped:**
-   - set `config.mock.failForVariantId` to force a 422 → the error renders and
-     **no** `add_to_cart` is pushed;
-   - double-click the button → one event, not two (the handler guards on
-     `isSubmitting`);
-   - reload and scroll past the product section twice → `view_item` once.
-6. **Events Manager → Diagnostics** a day later, for `value`/`currency` type
-   warnings that only surface at volume.
+5. **The negative tests**, which are the ones usually skipped:
+   force a 422 and confirm **no** event fires; double-click the button and
+   confirm one event rather than two; reload and scroll past the product twice
+   and confirm `view_item` fires once.
+6. **Events Manager → Diagnostics** a day later, for type and currency warnings
+   that only surface at volume.
 
 ### Preventing duplicates if Meta tracking already exists
 
-Shopify stores almost always already fire `AddToCart` — from the native Meta
-sales channel, a theme app extension, or a hardcoded pixel in `theme.liquid`.
-Adding a second sender double-counts, which inflates ATC volume, halves
-reported cost-per-ATC and corrupts the optimisation signal.
+Shopify stores almost always already fire `AddToCart` from the native Meta sales
+channel, a theme app extension, or a hardcoded pixel in `theme.liquid`. A second
+sender double-counts, which halves reported cost-per-ATC and corrupts the
+optimisation signal.
 
-**First, audit.** Pixel Helper shows every pixel on the page and every event
-each one sends; Events Manager flags overlapping events. Establish what already
-fires before adding anything.
+**Audit first.** Pixel Helper lists every pixel on the page and the events each
+one sends. Establish what already fires before adding anything.
 
-**Then pick one of three, in order of preference:**
+**Then pick one of three:**
 
-1. **One sender.** If Shopify's native Meta channel already sends `AddToCart`
-   with a correct catalog id, don't send a second. Use the dataLayer event for
-   GA4 only. Fewest moving parts, nothing to drift.
-2. **Disable the incumbent.** If the existing event is wrong — missing `value`,
-   wrong id format — turn it off at its source (Meta channel settings, or
-   remove the theme snippet) and let this implementation own the event. Never
-   leave both on with the intention of "filtering later."
-3. **Deduplicate explicitly** when both browser and server must send — the
-   normal case once Conversions API is in play. Meta drops a duplicate when
-   **`event_name` + `event_id`** match within its dedup window, so the same
-   `event_id` must ride on both. That is why `analytics.js` generates one
-   `event_id` per successful add and puts it in the dataLayer payload: the
-   pixel sends it as `eventID`, and the CAPI call sends the identical value as
-   `event_id`. Generating it at send time on each side instead — a common
-   mistake — produces two different ids and defeats the whole mechanism.
+1. **One sender.** If the incumbent already sends `AddToCart` with a correct
+   catalog ID, don't send a second. Use the dataLayer event for GA4 only.
+2. **Disable the incumbent.** If the existing event is wrong, missing `value` or
+   using the wrong ID format, turn it off at source and let this implementation
+   own the event. Never leave both on intending to filter later.
+3. **Deduplicate on `event_id`.** The normal case once the Conversions API is in
+   play. Meta drops the duplicate when `event_name` and `event_id` match, so the
+   same ID must ride on both senders. `analytics.js` generates one `event_id` per
+   successful add and puts it in the dataLayer payload: the pixel sends it as
+   `eventID`, the CAPI call sends the identical value as `event_id`. Generating
+   it separately on each side is the common mistake and defeats the mechanism.
 
-**One more guard at the trigger level.** Bind the tag to the `add_to_cart`
-Custom Event, never to a generic click trigger on the button. A click trigger
-fires on *attempts*, so it double-counts retries and records conversions for
-adds that failed. Firing off the dataLayer event means the event can only exist
-downstream of a successful cart response.
-
----
-
----
-
-## Fidelity notes
-
-Typography and colour were read off the Figma nodes rather than eyeballed:
-**Cormorant** for display, **Inter** for UI and body, **Nunito** for the ADD TO
-CART label, the step badges and the dark section's body copy — all three
-self-hosted as variable fonts (119KB total), so the page makes no third-party
-requests and renders identically offline.
-
-Every text style was re-read from its Figma node and diffed against the
-computed CSS in the browser. That pass caught seven mismatches, all now
-corrected: the FAQ heading is **Nunito**, not the display serif used by every
-other heading (node 1:259); section sub-heads are **15px**, not 18; the pack
-chip label is **14px**, not fluid up to 16; and the italic heading accent uses
-a *different weight and colour in each of the three places it appears* — Bold
-Italic `#5d8485` in the hero, Regular Italic `#3d5f60` in the comparison,
-Medium Italic `#5d8485` in How It Works. The How It Works sub-head is white at
-65%, and the mint CTA label is Medium, not SemiBold.
-
-One substitution: the comparison table's column headers are set in **Studio
-Feixen Sans**, a commercial face that can't be redistributed. Inter carries the
-same treatment — 15px, 2.25px tracking, uppercase, `#444` — which is visually
-near-identical at that size. Everything else uses the design's actual faces.
-
-The product block has no quantity stepper, because the Figma has none: the pack
-option *is* the quantity choice. The cart request and both dataLayer payloads
-still carry an explicit `quantity`, so adding a stepper is a markup change, not
-a logic one.
-
-Two places where the design is internally inconsistent, and what I did:
-
-- The product block shows **$80.92 / $89.95 / Save $8.98**, but 89.95 − 80.92
-  is **$9.03**. The saving is computed from the two prices at runtime so the
-  three numbers always agree. Changing a price in `product-data.js` cannot
-  desync the badge.
-- The style tab reads *Stemless* while the title reads *Stemmed Wine Chiller
-  Pair*. I defaulted to **Stemless / Couple Pair**, which is the combination
-  whose price ($80.92) the design actually displays.
-
-The Figma gallery is a single static image, so the working gallery is built
-from the design's own product renders (main shot, the two style shots, the
-cradles shot, and the hero lifestyle photo). The rail is rebuilt when the
-shopper switches style.
+**One more guard.** Bind the tag to the `add_to_cart` Custom Event, never to a
+generic click trigger on the button. A click trigger fires on *attempts*, so it
+double-counts retries and records conversions for adds that failed.
 
 ---
 
 ## Browsers and screen sizes tested
 
-**Verified** — Chrome 153 on macOS (headless, driven over the DevTools
-Protocol), across **29 real device widths from 280px (Galaxy Fold) to 2560px
-(QHD)**: 280, 320, 360, 375, 390, 393, 412, 414, 430, 480, 540, 600, 640, 720,
-768, 810, 820, 834, 900, 1024, 1180, 1280, 1366, 1440, 1512, 1600, 1728, 1920,
-2560.
+**Verified** — Chrome on macOS, driven over the DevTools Protocol, at 21 widths
+from 280px (Galaxy Fold) to 2560px (QHD): 280, 320, 360, 375, 390, 412, 430,
+480, 540, 640, 720, 768, 820, 900, 1024, 1180, 1280, 1440, 1600, 1920, 2560.
 
-At every one of those widths the audit checks four things: horizontal overflow,
-text rendering below 12px, interactive elements under 40px, and content
-clipped inside its own container. The result is clean — no overflow anywhere,
-no clipping, and every tap target at or above 44px except the inline "238
-Reviews" text link, which WCAG 2.5.8 exempts as inline. The one sub-12px value
-is the step badge at 11px, which is what the Figma specifies (10.856px).
+No horizontal overflow at any width. Zero console messages, exceptions or failed
+requests, checked against the deployed URLs rather than only localhost.
 
-Two issues the sweep caught and fixed: the buybox overflowed its column by 19px
-between roughly 860 and 1000px (the option chips now wrap instead of
-squeezing, which removes the failure mode rather than patching that band), and
-the gallery arrows were 38px on touch, below the comfortable minimum.
+Interaction paths verified in-browser: gallery thumbnails, arrows and the rail
+rebuilding on style change; the Color listbox by keyboard; accordion single-open;
+variant and pack switching with price and saving recomputing; the full
+add-to-cart round trip; and the double-click guard.
 
-Zero console messages, exceptions or failed requests across the whole sweep.
-
-Interaction paths verified in-browser: gallery thumb + arrows + style rebuild,
-accordion single-open, variant and pack switching, quantity clamping to
-inventory, the full add-to-cart round trip, and the double-click guard.
+A wider audit across 29 widths also checked for text under 12px, tap targets
+under 40px and content clipped inside its own container. It found two real bugs,
+both fixed: the buybox overflowed its column by 19px between roughly 860 and
+1000px, and the gallery arrows were 38px on touch.
 
 **Not verified** — Safari and Firefox were not available in this environment, so
-they are untested rather than known-good. The layout leans on `:has()`,
-`aspect-ratio`, `clamp()` and `text-wrap: balance`; all four are supported in
-current Safari and Firefox, but I would want to confirm on real builds before
-calling it done. `:has()` is the one worth checking first — it carries the
-selected state on the variant chips, so a failure there would be visible rather
-than cosmetic.
+they are untested rather than known-good. The layout uses `:has()`,
+`aspect-ratio`, `clamp()` and `text-wrap: balance`. All four are supported in
+current Safari and Firefox, but `:has()` carries the selected state on the
+variant chips, so a failure there would be visible rather than cosmetic. That is
+the first thing I would check on a real device.
 
-Automated checks that ship with the repo: a 32-assertion headless contract test
-covering the `/cart/add.js` request shape, both dataLayer events and the 404 /
-422 failure paths.
+---
 
 ## Time spent
 
-About 1 hour 10 minutes end to end (09:57–11:05), from an empty directory to the deployed
-page: roughly 40 minutes for the first build (design extraction, build, browser
-verification, deploy) and another 40 for the review pass — re-checking each
-section against the Figma, adding the variant badges, the Color dropdown, the
-Reviews section and the QA inspector, and correcting the comparison table's
-header treatment. Adjust this line if you would rather count it differently.
+About 3.5 hours end to end, across three sessions: roughly 70 minutes for the
+first build including design extraction and browser verification, around 90
+minutes re-checking every section against the Figma and adding what was missing,
+and a final pass for the device audit, cleanup and this document.
+
+---
 
 ## Unfinished / known gaps
 
-- **Safari and Firefox are untested** (see above). This is the gap I would close
-  first.
-- **Three of the nine sections were not built** — the "Sounds Familiar" problem
-  section, "The Real Difference", and the floating testimonial card. The brief
-  asked for five; there are six here plus the trust bar.
-- **The cart is write-only.** There is no cart drawer, line-item list or
-  running total — the request succeeds, fires its event and reports inline.
-  Nothing accumulates, because the brief scoped this to the add-to-cart call.
-- **A second colour was added beyond the design.** The Figma specifies only
-  Quartz, which leaves the Color dropdown a control with a single entry. I
-  added a Midnight finish (swatch derived from the Quartz render) and the six
-  variants it implies, so the dropdown is demonstrably a working control rather
-  than something that only looks like one. This is the one place the build
-  deliberately exceeds the file; everything else follows it. Removing it is two
-  lines in `product-data.js`.
+- **Safari and Firefox are untested.** The gap I would close first.
+- **Three of the nine Figma sections were not built** — the "Sounds Familiar"
+  problem section, "The Real Difference", and the floating testimonial card. The
+  brief asked for five; there are six here plus the trust bar.
+- **The cart is write-only.** No drawer, no line-item list, no running total. The
+  brief scoped this to the add-to-cart call, so the request succeeds, fires its
+  event and reports inline. Nothing accumulates.
 - **No automated accessibility audit.** Semantics were built in deliberately —
   radio groups for options, a real `<table>` for the comparison, generated
-  `aria-expanded`/`aria-controls`, roving tabindex, a skip link, `role="status"`
-  on the cart message — but I did not run axe or a screen reader over it.
-- **`preload` covers only Inter and Cormorant**, not Nunito, which is used
-  below the fold.
-- **No footer.** The Figma's footer is a flat image rather than laid-out
-  content, so there was nothing to reproduce faithfully; the page ends on the
-  FAQ.
+  `aria-expanded`/`aria-controls`, roving tabindex, a full ARIA listbox for the
+  colour dropdown, `role="status"` on the cart message, a skip link — but axe and
+  a screen reader were not run over it.
+- **One font is substituted.** The comparison table headers use Studio Feixen
+  Sans, a commercial licence. Inter carries the same 15px, 2.25px-tracked
+  uppercase treatment.
+- **No footer.** The Figma's footer is a flattened image rather than laid-out
+  content, so there was nothing to reproduce faithfully. The page ends on the FAQ.
+- **`preload` covers Inter and Cormorant only**, not Nunito, which is used below
+  the fold.
+
+---
+
+## Running it
+
+```bash
+python3 -m http.server 8000     # any static server
+# → http://localhost:8000
+```
+
+The page also opens fine straight from the filesystem. Scripts are classic
+`<script>` tags rather than ES modules specifically so that unzipping the
+submission and double-clicking `index.html` works without CORS errors, which
+would otherwise fill the console the brief asks to keep clean.
+
+```bash
+node test/cart-contract.test.js     # 32 passed, 0 failed
+```
+
+That test asserts the `/cart/add.js` request shape, both dataLayer payloads, the
+once-per-load `view_item` guard, and that the 404 and 422 failure paths push
+nothing. No dependencies.
+
+---
+
+## Sections built
+
+| # | Section | Figma node |
+|---|---------|-----------|
+| 1 | Hero | `1:8` |
+| 2 | Product — gallery, style tabs, 3 packs, 2 colours, price, ATC | `1:159` |
+| 3 | Reviews — rating summary and three cards | `1:59` |
+| 4 | How It Works — four steps | `1:94` |
+| 5 | Comparison table | `1:81` |
+| 6 | FAQ accordion | `1:255` |
+
+The trust bar under the hero is included too. At 69px it is too small to count
+as one of the five, but the hero reads wrong without it.
+
+---
+
+## File layout
+
+```
+index.html
+css/
+  tokens.css        design tokens read off the Figma nodes
+  base.css          reset, fonts, shared primitives
+  sections.css      per-section layout
+  responsive.css    mobile adaptation
+js/
+  config.js         USE_MOCK_CART, currency, page-variation resolver
+  product-data.js   the product, 12 variants, plus the Liquid that replaces it
+  analytics.js      dataLayer, view_item, add_to_cart
+  cart-api.js       Shopify AJAX Cart API request logic
+  cart-mock.js      fetch-shaped mock transport, demo only
+  gallery.js        product image gallery
+  colorselect.js    the Color dropdown, an ARIA listbox
+  accordion.js      FAQ accordion
+  main.js           bootstrap and wiring
+  debug-panel.js    QA overlay, inert unless ?debug=1
+assets/
+  fonts/            Cormorant, Inter, Nunito — self-hosted, 119KB
+  images/           exported from Figma
+test/
+  cart-contract.test.js
+```
+
+---
+
+## Simulated add to cart
+
+The request logic and the mock live in separate files and neither imports the
+other.
+
+**`js/cart-api.js`** is what would ship to a live storefront, unchanged:
+
+```js
+send('/cart/add.js', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+  body: JSON.stringify({ items: [{ id: variantId, quantity: quantity }] })
+})
+```
+
+It takes a `transport` argument with the same signature as `window.fetch` and
+falls back to `window.fetch` when none is passed. It has no knowledge that a mock
+exists. Non-2xx responses are parsed before `ok` is checked, because Shopify puts
+the shopper-facing message in the failure body, and are rethrown as a `CartError`
+carrying `status`, `message` and `description`.
+
+**`js/cart-mock.js`** implements the same contract: a promise of an object with
+`.ok`, `.status` and `.json()`. It simulates latency and returns realistic
+payloads — a Shopify line item on success with prices as integer minor units, a
+422 when quantity exceeds inventory, a 404 for an unknown variant.
+
+**Going live** is one line in `js/config.js`:
+
+```js
+USE_MOCK_CART: false
+```
+
+…plus replacing `js/product-data.js` with the Liquid block quoted at the top of
+that file.
+
+### Seeing it work
+
+The request never reaches the network, so **the Network tab shows nothing** by
+design. Append `?debug=1` to the URL and a panel records the exact POST, the
+response status and payload, and every dataLayer push as it happens. It only
+observes, and is inert without the query parameter.
+
+To force the failure path, in the console:
+
+```js
+Digicom.config.mock.failForVariantId = 45329087452195;
+```
+
+The error renders inline, no `add_to_cart` is pushed, and the console stays clean.
+
+---
+
+## dataLayer events
+
+`window.dataLayer` is initialised in `js/analytics.js` before anything can push
+to it. Both events use GA4 ecommerce shape, and each push is preceded by
+`dataLayer.push({ ecommerce: null })` so fields from the previous event cannot
+leak into the next.
+
+Every payload carries `page_variation`, the displayed page variation, resolved
+from `?variation=` and defaulting to `control`.
+
+**`view_item`** fires once per page load, when the product section first becomes
+visible. An IntersectionObserver watches the section and disconnects the moment
+it fires; a module-level flag guards the event a second time.
+
+**`add_to_cart`** fires only inside the `.then()` of the settled promise, never
+on button click and never optimistically. A failed add takes the `.catch()`
+branch, renders an inline error, and pushes nothing. `value` is the line total,
+`items[].price` is the unit price.
+
+```js
+{
+  event: 'add_to_cart',
+  page_variation: 'control',
+  event_id: '9f1c2f7e-...',
+  ecommerce: {
+    currency: 'USD',
+    value: 161.84,
+    items: [{
+      item_id: '45329087452195',
+      item_name: 'VoChill Wine Chiller',
+      item_brand: 'VoChill',
+      item_variant: 'Stemless / Couple Pair / Quartz',
+      price: 80.92,
+      quantity: 2,
+      currency: 'USD'
+    }]
+  }
+}
+```
+
+---
+
+## Notes on fidelity
+
+Typography and colour were read from the Figma nodes rather than estimated.
+Cormorant for display, Inter for UI and body, Nunito for the ADD TO CART label,
+the step badges, the dark section body copy and the FAQ heading. All three are
+self-hosted as variable fonts, 119KB total, so the page makes no third-party
+requests and renders identically offline.
+
+Three places where the design is ambiguous or contradictory, and what I did:
+
+- The product block shows **$80.92 / $89.95 / Save $8.98**, but 89.95 − 80.92 is
+  **$9.03**. The saving is computed from the two prices at runtime so the three
+  numbers always agree.
+- The style tab reads *Stemless* while the title reads *Stemmed Wine Chiller
+  Pair*. I defaulted to Stemless / Couple Pair, the combination priced at the
+  $80.92 the design displays.
+- The comparison headers use Studio Feixen Sans, a commercial licence. Inter
+  carries the same treatment.
+
+One deliberate addition beyond the design: the Figma specifies a single colour,
+which leaves the Color dropdown a control with nothing to choose. I added a
+Midnight finish, with the swatch derived from the Quartz render, and the six
+variants it implies. Removing it is two lines in `product-data.js`.
+
+The Figma gallery is a single static image, so the working gallery is built from
+the design's own renders: the main shot, the two style shots, the cradles shot
+and the hero lifestyle photo. The rail rebuilds when the shopper switches style.
